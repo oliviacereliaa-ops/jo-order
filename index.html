@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>JO Order</title>
+<meta name="theme-color" content="#1f2a24">
+<style>
+:root{
+  --bg:#f4f1ea;--panel:#fffdf8;--ink:#1f2a24;--muted:#6b726c;--line:#e2ddd1;
+  --accent:#2f6b4f;--accent-ink:#fff;--me:#2f6b4f;--me-ink:#fff;--warn:#a5531b;--warn-bg:#fbeee2;
+  --wa:#1f8f4e;--radius:14px;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#141917;--panel:#1d2421;--ink:#e9ece8;--muted:#9aa29c;--line:#2f3833;
+  --accent:#5fae86;--accent-ink:#0f1512;--me:#2f6b4f;--me-ink:#fff;--warn:#f0a36a;--warn-bg:#3a2a1d;--wa:#3fbf73;
+}}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+header h1{font-size:17px;margin:0;font-weight:650;letter-spacing:.2px}
+header .sub{font-size:12px;color:var(--muted)}
+header .grow{flex:1}
+.icon-btn{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+main{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+.wrap{max-width:720px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:85%;padding:9px 13px;border-radius:var(--radius);white-space:pre-wrap;word-wrap:break-word}
+.bot{background:var(--panel);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+.me{background:var(--me);color:var(--me-ink);align-self:flex-end;border-bottom-right-radius:4px}
+.err{border-color:var(--warn);color:var(--warn)}
+.typing{color:var(--muted);font-style:italic}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;align-self:stretch}
+.card h2{font-size:14px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 12px;margin-bottom:12px}
+label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:3px}
+input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:7px 9px;width:100%;min-width:0}
+input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
+.item{border-top:1px dashed var(--line);padding:10px 0;display:grid;grid-template-columns:1fr 70px 110px 32px;gap:6px 8px;align-items:end}
+.item .desc{grid-column:1/-1;font-size:13px;font-weight:600}
+.item .desc small{font-weight:400;color:var(--muted)}
+.item .notes{grid-column:1/-2}
+.item .val{grid-column:-2/-1;text-align:right;font-size:12px;color:var(--muted);align-self:center}
+.item .rm{border:none;background:transparent;color:var(--muted);font-size:18px;cursor:pointer;padding:4px}
+.unknown{color:var(--warn)}
+.warn{background:var(--warn-bg);color:var(--warn);border-radius:9px;padding:7px 10px;font-size:13px;margin-top:8px}
+.total{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:10px;margin-top:4px;font-weight:650}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.wa{background:var(--wa);border-color:var(--wa);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.link{background:none;border:none;color:var(--accent);font:inherit;font-size:13px;cursor:pointer;padding:0}
+details.edit{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+details.edit summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent);padding:4px 0}
+pre.wa-text{margin:0;white-space:pre-wrap;font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--bg);border-radius:10px;padding:10px 12px}
+footer{border-top:1px solid var(--line);background:var(--panel);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+footer form{max-width:720px;margin:0 auto;display:flex;gap:8px;align-items:flex-end}
+footer textarea{resize:none;max-height:140px;border-radius:12px}
+dialog{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);color:var(--ink);width:min(440px,calc(100% - 32px));padding:18px}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+dialog h2{margin:0 0 12px;font-size:17px}
+dialog label{margin-bottom:10px}
+.hint{font-size:12px;color:var(--muted)}
+@media (max-width:480px){.grid{grid-template-columns:1fr 1fr}.item{grid-template-columns:1fr 60px 90px 28px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="grow">
+    <h1>JO Order</h1>
+    <div class="sub" id="status">Not connected</div>
+  </div>
+  <button class="icon-btn" id="newBtn" title="Start a new order">New</button>
+  <button class="icon-btn" id="setBtn" title="Settings">Settings</button>
+</header>
+
+<main id="main"><div class="wrap" id="chat"></div></main>
+
+<footer>
+  <form id="form">
+    <textarea id="input" rows="1" placeholder="e.g. Offline, sage green 4x1 2 pcs @20rb for Hans, kirim Jumat"></textarea>
+    <button class="btn primary" id="sendBtn" type="submit">Send</button>
+  </form>
+</footer>
+
+<datalist id="articles"></datalist>
+
+<dialog id="settings">
+  <form method="dialog" id="setForm">
+    <h2>Connect to your sheet</h2>
+    <label>Apps Script web app URL
+      <input id="cfgUrl" placeholder="https://script.google.com/macros/s/…/exec" required>
+    </label>
+    <label>PIN
+      <input id="cfgPin" type="password" required>
+    </label>
+    <p class="hint">Saved only in this browser.</p>
+    <div class="row">
+      <button class="btn primary" value="save">Save &amp; connect</button>
+      <button class="btn" value="cancel" formnovalidate>Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const chat = $('chat'), main = $('main'), input = $('input');
+  const store = {
+    get(k){ try { return localStorage.getItem(k) || ''; } catch { return ''; } },
+    set(k,v){ try { localStorage.setItem(k,v); } catch {} }
+  };
+  let cfg = { url: store.get('jo.url'), pin: store.get('jo.pin') };
+  let products = [], byArticle = {}, nextPo = '', draft = null, busy = false, cardEl = null, saveBtnRef = null;
+  const CONFIRM_RE = /^\s*(ok|oke|okay|okey|confirm|confirmed|konfirmasi|ya|yes|y|yup|save|simpan|gas|lanjut|setuju|sip|done|deal)\s*[.!]*\s*$/i;
+
+  /* ---------- helpers ---------- */
+  function h(tag, attrs = {}, ...kids) {
+    const el = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k.startsWith('on')) el.addEventListener(k.slice(2), v);
+      else if (k === 'class') el.className = v;
+      else if (v !== undefined && v !== null && v !== false) el.setAttribute(k, v === true ? '' : v);
+    }
+    for (const kid of kids.flat()) if (kid != null) el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+    return el;
+  }
+  const rp = n => 'Rp' + Math.round(Number(n) || 0).toLocaleString('en-US');
+  const num = v => Number(String(v).replace(/[^\d.]/g, '')) || 0;
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtDate(s) {
+    const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+    return m ? `${+m[3]} ${MONTHS[+m[2] - 1]} ${m[1]}` : '-';
+  }
+  function today() {
+    const d = new Date(Date.now() + 7 * 3600e3); // Asia/Jakarta
+    return d.toISOString().slice(0, 10);
+  }
+  const scroll = () => requestAnimationFrame(() => main.scrollTop = main.scrollHeight);
+  function say(text, who = 'bot', extra = '') {
+    const el = h('div', { class: `msg ${who} ${extra}` }, text);
+    chat.append(el); scroll(); return el;
+  }
+
+  async function api(action, data = {}) {
+    if (!cfg.url) throw new Error('Open Settings and paste your Apps Script URL first.');
+    const res = await fetch(cfg.url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action, pin: cfg.pin, ...data })
+    });
+    const json = await res.json().catch(() => { throw new Error('The script did not return JSON. Check the deployment access is "Anyone".'); });
+    if (!json.ok) throw new Error(json.error || 'Request failed');
+    return json;
+  }
+
+  /* ---------- connect ---------- */
+  async function connect() {
+    $('status').textContent = 'Connecting…';
+    try {
+      const r = await api('init');
+      products = r.products; nextPo = r.nextPo;
+      byArticle = Object.fromEntries(products.map(p => [p.article.toUpperCase(), p]));
+      $('articles').replaceChildren(...products.map(p => h('option', { value: p.article }, `${p.article} · ${p.description}`)));
+      $('status').textContent = `${products.length} products · next PO ${nextPo}`;
+      return true;
+    } catch (e) {
+      $('status').textContent = 'Not connected';
+      say(e.message, 'bot', 'err');
+      return false;
+    }
+  }
+
+  $('setBtn').onclick = () => { $('cfgUrl').value = cfg.url; $('cfgPin').value = cfg.pin; $('settings').showModal(); };
+  $('settings').addEventListener('close', async () => {
+    if ($('settings').returnValue !== 'save') return;
+    cfg = { url: $('cfgUrl').value.trim(), pin: $('cfgPin').value.trim() };
+    store.set('jo.url', cfg.url); store.set('jo.pin', cfg.pin);
+    if (await connect()) say('Connected. Type an order whenever you are ready.');
+  });
+
+  /* ---------- chat ---------- */
+  $('form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text || busy) return;
+    input.value = ''; autosize();
+    say(text, 'me');
+    if (draft && cardEl && CONFIRM_RE.test(text)) { confirmSave(saveBtnRef); return; }
+    busy = true; $('sendBtn').disabled = true;
+    const typing = say('Reading your order…', 'bot', 'typing');
+    try {
+      const r = await api('parse', { text, draft });
+      typing.remove();
+      draft = { po: (draft && draft.po) || nextPo, ...r.order };
+      if (r.reply) say(r.reply);
+      renderDraft();
+    } catch (err) {
+      typing.remove(); say(err.message, 'bot', 'err');
+    } finally {
+      busy = false; $('sendBtn').disabled = false; input.focus();
+    }
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); $('form').requestSubmit(); }
+  });
+  function autosize() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 140) + 'px'; }
+  input.addEventListener('input', autosize);
+
+  $('newBtn').onclick = () => {
+    if (cardEl) cardEl.remove();
+    cardEl = null; draft = null;
+    say('New order. What would you like to enter?');
+  };
+
+  /* ---------- draft card ---------- */
+  function renderDraft() {
+    if (cardEl) cardEl.remove();
+    if (!draft) return;
+    const set = (k) => e => { draft[k] = e.target.value; refreshTotals(); };
+    const field = (lbl, k, type = 'text') => h('label', {}, lbl, h('input', { type, value: draft[k] || '', oninput: set(k) }));
+
+    const items = h('div');
+    const totalEl = h('span'), warnEl = h('div');
+    const preview = h('pre', { class: 'wa-text' });
+    function refreshTotals() {
+      preview.textContent = waText(draft.po || nextPo, normalized());
+      const qty = draft.items.reduce((s, i) => s + num(i.qty), 0);
+      const val = draft.items.reduce((s, i) => s + num(i.qty) * num(i.price), 0);
+      totalEl.textContent = `${qty} pcs · ${rp(val)}`;
+      const w = [];
+      if (!draft.items.length) w.push('Add at least one item.');
+      draft.items.forEach((i, n) => { if (!byArticle[String(i.article).toUpperCase()]) w.push(`Item ${n + 1}: article "${i.article || '?'}" is not in Product Database.`); });
+      if (!draft.deliveryDate) w.push('Delivery date is empty.');
+      if (!draft.buyer) w.push('Buyer is empty.');
+      warnEl.replaceChildren(...(w.length ? [h('div', { class: 'warn' }, w.join('\n'))] : []));
+      warnEl.style.whiteSpace = 'pre-wrap';
+    }
+    function drawItems() {
+      items.replaceChildren(...draft.items.map((it, idx) => {
+        const p = byArticle[String(it.article).toUpperCase()];
+        const desc = h('div', { class: 'desc' + (p ? '' : ' unknown') },
+          p ? p.description : (it.description || 'Unknown product'),
+          p ? h('small', {}, `  ${p.category} / ${p.subCat} · list ${rp(p.price)}`) : null);
+        const val = h('div', { class: 'val' }, rp(num(it.qty) * num(it.price)));
+        const upd = (k) => e => {
+          it[k] = e.target.value;
+          if (k === 'article') {
+            const np = byArticle[it.article.trim().toUpperCase()];
+            if (np) { it.description = np.description; it.price = np.price; drawItems(); refreshTotals(); return; }
+          }
+          val.textContent = rp(num(it.qty) * num(it.price)); refreshTotals();
+        };
+        return h('div', { class: 'item' }, desc,
+          h('label', {}, 'Article', h('input', { list: 'articles', value: it.article || '', onchange: upd('article') })),
+          h('label', {}, 'Qty', h('input', { inputmode: 'numeric', value: it.qty, oninput: upd('qty') })),
+          h('label', {}, 'Price', h('input', { inputmode: 'numeric', value: it.price, oninput: upd('price') })),
+          h('button', { class: 'rm', type: 'button', title: 'Remove', onclick: () => { draft.items.splice(idx, 1); drawItems(); refreshTotals(); } }, '×'),
+          h('label', { class: 'notes' }, 'Notes', h('input', { value: it.notes || '', oninput: upd('notes') })),
+          val);
+      }));
+    }
+    drawItems();
+
+    const saveBtn = h('button', { class: 'btn primary', type: 'button', onclick: () => confirmSave(saveBtn) }, 'Confirm & save to sheet');
+    cardEl = h('div', { class: 'card' },
+      h('h2', {}, 'Final template: confirm to save'),
+      preview,
+      warnEl,
+      h('details', { class: 'edit' },
+        h('summary', {}, 'Edit details'),
+        h('div', { class: 'grid' },
+          field('PO', 'po'), field('Buyer', 'buyer'),
+          field('Entry date', 'entryDate', 'date'), field('Delivery date', 'deliveryDate', 'date')),
+        items,
+        h('button', { class: 'link', type: 'button', onclick: () => { draft.items.push({ article: '', description: '', qty: 1, price: 0, notes: '' }); drawItems(); refreshTotals(); } }, '+ Add item'),
+        h('div', { class: 'total' }, h('span', {}, 'Total'), totalEl)),
+      h('div', { class: 'row' }, saveBtn,
+        h('button', { class: 'btn', type: 'button', onclick: () => $('newBtn').click() }, 'Discard')),
+      h('p', { class: 'hint' }, 'Type "ok" or "confirm" to save it to the sheet, or keep chatting to change it (e.g. "qty jadi 5", "tambah 6x1 1 pcs").'));
+    saveBtnRef = saveBtn;
+    refreshTotals();
+    chat.append(cardEl); scroll();
+  }
+
+  function normalized() {
+    return { ...draft, items: draft.items.map(i => {
+      const p = byArticle[String(i.article).toUpperCase()];
+      return { ...i, description: p ? p.description : (i.description || '?'), qty: num(i.qty), price: num(i.price) };
+    }) };
+  }
+
+  async function confirmSave(btn) {
+    const bad = draft.items.find(i => !byArticle[String(i.article).toUpperCase()] || !(num(i.qty) > 0));
+    if (!draft.items.length || bad) { say('Fix the items marked in the card before saving.', 'bot', 'err'); return; }
+    if (busy) return;
+    busy = true; btn.disabled = true; btn.textContent = 'Saving…';
+    const typing = say('Saving to the Order sheet…', 'bot', 'typing');
+    try {
+      const order = normalized();
+      const r = await api('submit', { order });
+      typing.remove();
+      nextPo = r.nextPo;
+      $('status').textContent = `${products.length} products · next PO ${nextPo}`;
+      cardEl.remove(); cardEl = null; draft = null;
+      say(`Saved ${r.rowsAdded} row${r.rowsAdded > 1 ? 's' : ''} to the Order sheet as #${r.po}.`);
+      showWhatsApp(waText(r.po, r.order));
+    } catch (err) {
+      typing.remove();
+      btn.disabled = false; btn.textContent = 'Confirm & save to sheet';
+      say(err.message, 'bot', 'err');
+    } finally {
+      busy = false;
+    }
+  }
+
+  /* ---------- WhatsApp message ---------- */
+  function waText(po, o) {
+    const qty = o.items.reduce((s, i) => s + i.qty, 0);
+    const total = o.items.reduce((s, i) => s + i.qty * i.price, 0);
+    const lines = [
+      `*ORDER #${po}*`,
+      `Buyer: ${o.buyer || '-'}`,
+      `Order date: ${fmtDate(o.entryDate)}`,
+      `Delivery: ${fmtDate(o.deliveryDate)}`,
+      ''
+    ];
+    o.items.forEach((i, n) => {
+      lines.push(`${n + 1}. ${i.article} · ${i.description}`);
+      lines.push(`   ${i.qty} pcs × ${rp(i.price)} = ${rp(i.qty * i.price)}`);
+      if (i.notes) lines.push(`   Note: ${i.notes}`);
+    });
+    lines.push('', `*Total: ${qty} pcs · ${rp(total)}*`);
+    return lines.join('\n');
+  }
+  function showWhatsApp(text) {
+    const copyBtn = h('button', { class: 'btn', type: 'button', onclick: async () => {
+      try { await navigator.clipboard.writeText(text); copyBtn.textContent = 'Copied'; }
+      catch { const r = document.createRange(); r.selectNodeContents(pre); getSelection().removeAllRanges(); getSelection().addRange(r); copyBtn.textContent = 'Selected: press copy'; }
+      setTimeout(() => copyBtn.textContent = 'Copy', 1800);
+    } }, 'Copy');
+    const pre = h('pre', { class: 'wa-text' }, text);
+    chat.append(h('div', { class: 'card' },
+      h('h2', {}, 'WhatsApp message'), pre,
+      h('div', { class: 'row' }, copyBtn,
+        h('a', { class: 'btn wa', href: 'https://wa.me/?text=' + encodeURIComponent(text), target: '_blank', rel: 'noopener' }, 'Open in WhatsApp'))));
+    scroll();
+  }
+
+  /* ---------- start ---------- */
+  say('Hi! Type an order the way you would in a chat: buyer, products, quantity, price if different, names, delivery date. I will turn it into the order template for you to confirm.');
+  if (cfg.url) connect(); else $('setBtn').click();
+})();
+</script>
+</body>
+</html>
