@@ -145,11 +145,20 @@ dialog label{margin-bottom:10px}
 
   async function api(action, data = {}) {
     if (!cfg.url) throw new Error('Open Settings and paste your Apps Script URL first.');
-    const res = await fetch(cfg.url, {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 60000);
+    let res;
+    try {
+      res = await fetch(cfg.url, {
+      signal: ctrl.signal,
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify({ action, pin: cfg.pin, ...data })
-    });
+      });
+    } catch (e) {
+      if (e.name === 'AbortError') throw new Error('No answer from the sheet after 60 seconds. Open Apps Script and run testSetup to see what is wrong.');
+      throw new Error('Could not reach the sheet: ' + e.message + '. Check the URL in Settings.');
+    } finally { clearTimeout(timer); }
     const json = await res.json().catch(() => { throw new Error('The script did not return JSON. Check the deployment access is "Anyone".'); });
     if (!json.ok) throw new Error(json.error || 'Request failed');
     return json;
