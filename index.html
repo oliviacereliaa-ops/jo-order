@@ -32,7 +32,7 @@ header .logo{height:34px;width:auto;display:block}
 header h1{font-size:17px;margin:0;font-weight:650;letter-spacing:.2px}
 header .sub{font-size:12px;color:var(--muted)}
 header .grow{flex:1}
-.icon-btn{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer}
+.icon-btn{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer;text-decoration:none}
 main{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
 .wrap{max-width:720px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:10px}
 .msg{max-width:85%;padding:9px 13px;border-radius:var(--radius);white-space:pre-wrap;word-wrap:break-word}
@@ -82,8 +82,9 @@ dialog label{margin-bottom:10px}
     <h1>JO Order</h1>
     <div class="sub" id="status">Not connected</div>
   </div>
+  <a class="icon-btn" href="./production.html" target="_blank" rel="noopener" title="Open production board">Production</a>
   <button class="icon-btn" id="newBtn" title="Start a new order">New</button>
-  <button class="icon-btn" id="setBtn" title="Settings">Settings</button>
+  <button class="icon-btn" id="setBtn" title="Settings" aria-label="Settings">⚙</button>
 </header>
 
 <main id="main"><div class="wrap" id="chat"></div></main>
@@ -149,10 +150,16 @@ dialog label{margin-bottom:10px}
     return d.toISOString().slice(0, 10);
   }
   const scroll = () => requestAnimationFrame(() => main.scrollTop = main.scrollHeight);
-  function say(text, who = 'bot', extra = '') {
+  let log = [];
+  try { log = JSON.parse(store.get('jo.chat') || '[]'); } catch { log = []; }
+  const saveLog = () => { log = log.slice(-60); store.set('jo.chat', JSON.stringify(log)); };
+  function say(text, who = 'bot', extra = '', keep = extra !== 'typing') {
     const el = h('div', { class: `msg ${who} ${extra}` }, text);
-    chat.append(el); scroll(); return el;
+    chat.append(el); scroll();
+    if (keep) { log.push({ t: 'msg', text, who, extra }); saveLog(); }
+    return el;
   }
+  const saveDraft = () => store.set('jo.draft', draft ? JSON.stringify(draft) : '');
 
   async function api(action, data = {}) {
     if (!cfg.url) throw new Error('Open Settings and paste your Apps Script URL first.');
@@ -183,6 +190,7 @@ dialog label{margin-bottom:10px}
       products = r.products; nextPo = r.nextPo;
       byArticle = Object.fromEntries(products.map(p => [p.article.toUpperCase(), p]));
       $('articles').replaceChildren(...products.map(p => h('option', { value: p.article }, `${p.article} · ${p.description}`)));
+      if (draft && !cardEl) renderDraft();
       $('status').textContent = `${products.length} product${products.length === 1 ? "" : "s"} · next PO ${nextPo}`;
       return true;
     } catch (e) {
@@ -213,7 +221,7 @@ dialog label{margin-bottom:10px}
     try {
       const r = await api('parse', { text, draft });
       typing.remove();
-      draft = { po: (draft && draft.po) || nextPo, ...r.order };
+      draft = { po: (draft && draft.po) || nextPo, ...r.order }; saveDraft();
       if (r.reply) say(r.reply);
       renderDraft();
     } catch (err) {
@@ -230,7 +238,8 @@ dialog label{margin-bottom:10px}
 
   $('newBtn').onclick = () => {
     if (cardEl) cardEl.remove();
-    cardEl = null; draft = null;
+    cardEl = null; draft = null; saveDraft();
+    chat.replaceChildren(); log = []; saveLog();
     say('New order. What would you like to enter?');
   };
 
@@ -245,6 +254,7 @@ dialog label{margin-bottom:10px}
     const totalEl = h('span'), warnEl = h('div');
     const preview = h('pre', { class: 'wa-text' });
     function refreshTotals() {
+      saveDraft();
       preview.textContent = waText(draft.po || nextPo, normalized());
       const qty = draft.items.reduce((s, i) => s + num(i.qty), 0);
       const val = draft.items.reduce((s, i) => s + num(i.qty) * num(i.price), 0);
@@ -323,9 +333,11 @@ dialog label{margin-bottom:10px}
       typing.remove();
       nextPo = r.nextPo;
       $('status').textContent = `${products.length} product${products.length === 1 ? "" : "s"} · next PO ${nextPo}`;
-      cardEl.remove(); cardEl = null; draft = null;
+      cardEl.remove(); cardEl = null; draft = null; saveDraft();
       say(`Saved ${r.rowsAdded} row${r.rowsAdded > 1 ? 's' : ''} to the Order sheet as #${r.po}.`);
       showWhatsApp(waText(r.po, r.order));
+      log.push({ t: 'wa', text: waText(r.po, r.order) }); saveLog();
+      chat.append(h('div', { class: 'msg bot' }, `#${r.po} is now In Queue on the `, h('a', { href: './production.html', target: '_blank', rel: 'noopener' }, 'Production board'), '.')); scroll();
     } catch (err) {
       typing.remove();
       btn.disabled = false; btn.textContent = 'Confirm & save to sheet';
@@ -369,7 +381,13 @@ dialog label{margin-bottom:10px}
   }
 
   /* ---------- start ---------- */
-  say('Hi! Type an order the way you would in a chat: buyer, products, quantity, price if different, names, delivery date. I will turn it into the order template for you to confirm.');
+  if (log.length) {
+    const old = log; log = [];
+    old.forEach(m => m.t === 'wa' ? (showWhatsApp(m.text), log.push(m)) : say(m.text, m.who, m.extra));
+    try { draft = JSON.parse(store.get('jo.draft') || 'null'); } catch { draft = null; }
+  } else {
+    say('Hi! Type an order the way you would in a chat: buyer, products, quantity, price if different, names, delivery date. I will turn it into the order template for you to confirm.');
+  }
   if (cfg.url) connect(); else $('setBtn').click();
 })();
 </script>
