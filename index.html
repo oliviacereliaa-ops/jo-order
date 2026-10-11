@@ -379,8 +379,19 @@ startGate(() => {
     let products = [], byArticle = {}, nextPo = '', draft = null, busy = false, cardEl = null, saveBtnRef = null;
     const CONFIRM_RE = /^\s*(ok|oke|okay|okey|confirm|confirmed|konfirmasi|ya|yes|y|yup|save|simpan|gas|lanjut|setuju|sip|done|deal)\s*[.!]*\s*$/i;
     const rp = n => 'Rp' + Math.round(Number(n) || 0).toLocaleString('en-US');
-    // Whole Rupiah / pcs only: "20.000", "20,000" and "Rp20000" all mean 20000.
-    const num = v => Number(String(v).replace(/\D/g, '')) || 0;
+    // Reads Indonesian or English number formats. A separator followed by exactly 3 digits is a
+    // thousands separator ("20.000", "1,500", "1.500.000"); otherwise it is a decimal ("69.14", "69,14", "1.500,5").
+    function num(v) {
+      if (typeof v === 'number') return Number.isFinite(v) ? v : 0;
+      const s = String(v).replace(/[^\d.,]/g, '');
+      const at = Math.max(s.lastIndexOf('.'), s.lastIndexOf(','));
+      if (at < 0) return Number(s) || 0;
+      const whole = s.slice(0, at).replace(/[.,]/g, ''), frac = s.slice(at + 1);
+      const seps = new Set(s.match(/[.,]/g));
+      const thousands = frac.length === 3 && seps.size === 1;
+      return Number(thousands ? whole + frac : whole + '.' + frac) || 0;
+    }
+    const fmtQty = n => String(+n.toFixed(3)); // 0.1 + 0.2 shows as 0.3, not 0.30000000000000004
     function fmtDate(s) {
       const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
       return m ? `${+m[3]} ${MONTHS[+m[2] - 1]} ${m[1]}` : '-';
@@ -468,7 +479,7 @@ startGate(() => {
         preview.textContent = waText(draft.po || nextPo, normalized());
         const qty = draft.items.reduce((s, i) => s + num(i.qty), 0);
         const val = draft.items.reduce((s, i) => s + num(i.qty) * num(i.price), 0);
-        totalEl.textContent = `${qty} pcs · ${rp(val)}`;
+        totalEl.textContent = `${fmtQty(qty)} pcs · ${rp(val)}`;
         const w = [];
         if (!draft.items.length) w.push('Add at least one item.');
         draft.items.forEach((i, n) => { if (!byArticle[String(i.article).toUpperCase()]) w.push(`Item ${n + 1}: article "${i.article || '?'}" is not in Product Database.`); });
@@ -493,7 +504,7 @@ startGate(() => {
           };
           return h('div', { class: 'item' }, desc,
             h('label', {}, 'Article', h('input', { list: 'articles', value: it.article || '', onchange: upd('article') })),
-            h('label', {}, 'Qty', h('input', { inputmode: 'numeric', value: it.qty, oninput: upd('qty') })),
+            h('label', {}, 'Qty', h('input', { inputmode: 'decimal', value: it.qty, oninput: upd('qty') })),
             h('label', {}, 'Price', h('input', { inputmode: 'numeric', value: it.price, oninput: upd('price') })),
             h('button', { class: 'rm', type: 'button', title: 'Remove', onclick: () => { draft.items.splice(idx, 1); drawItems(); refreshTotals(); } }, '×'),
             h('label', { class: 'notes' }, 'Notes', h('input', { value: it.notes || '', oninput: upd('notes') })),
@@ -569,10 +580,10 @@ startGate(() => {
       ];
       o.items.forEach((i, n) => {
         lines.push(`${n + 1}. ${i.article} · ${i.description}`);
-        lines.push(`   ${i.qty} pcs × ${rp(i.price)} = ${rp(i.qty * i.price)}`);
+        lines.push(`   ${fmtQty(i.qty)} pcs × ${rp(i.price)} = ${rp(i.qty * i.price)}`);
         if (i.notes) lines.push(`   Note: ${i.notes}`);
       });
-      lines.push('', `*Total: ${qty} pcs · ${rp(total)}*`);
+      lines.push('', `*Total: ${fmtQty(qty)} pcs · ${rp(total)}*`);
       return lines.join('\n');
     }
     function showWhatsApp(text) {
