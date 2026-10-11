@@ -54,7 +54,7 @@ If you change the PIN, change it in Apps Script too (see the checklist below).
 ## Deploying the Apps Script
 **Deploy → Manage deployments → Web app**: *Execute as: Me*, *Who has access: Anyone*. When you update `Code.gs`, choose **Edit → New version** on the same deployment so the URL stays the same.
 
-## Backend checklist (`Code.gs`, not in this repo)
+## Backend checklist (`backend/Code.gs`)
 The PIN is 6 digits and the URL is in the public HTML, so the script is what has to stop guessing:
 - [ ] **Lock out after failed PINs**, e.g. count failures in `CacheService` and refuse all requests for 15 minutes after 10 misses. Without this, a 6-digit PIN can be guessed by a script.
 - [ ] Read the PIN from `PropertiesService.getScriptProperties()` instead of writing it in the code.
@@ -67,6 +67,7 @@ The PIN is 6 digits and the URL is in the public HTML, so the script is what has
 index.html            the app (Order + Production tabs)
 production.html       redirect to index.html#production
 scripts/configure.py  writes the password hash + script URL into index.html
+backend/Code.gs       the Apps Script (paste into Extensions → Apps Script; secrets live in Script Properties)
 .env.example          template for .env (committed)
 .env                  your secrets (git-ignored)
 ```
