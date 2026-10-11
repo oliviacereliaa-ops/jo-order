@@ -120,6 +120,9 @@ dialog .row .btn{flex:1}
 #orderView pre.wa-text{margin:0;white-space:pre-wrap;font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--bg);border-radius:10px;padding:10px 12px}
 #orderView footer{border-top:1px solid var(--line);background:var(--panel);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
 #orderView footer form{max-width:720px;margin:0 auto;display:flex;gap:8px;align-items:flex-end}
+#orderView .starters{max-width:720px;margin:0 auto 8px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+#orderView .starter{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+#orderView .starter:hover{border-color:var(--accent);color:var(--accent)}
 #orderView footer textarea{resize:none;max-height:140px;border-radius:12px}
 @media (max-width:480px){#orderView .item{grid-template-columns:1fr 60px 90px 28px}}
 
@@ -205,6 +208,11 @@ body:not(.locked) #gate{display:none}
 <section class="view" id="orderView" role="tabpanel" aria-label="Order">
   <div class="scroll" id="orderMain"><div class="wrap" id="chat"></div></div>
   <footer>
+    <div class="starters">
+      <button type="button" class="starter" id="tplBtn" title="Put a fill-in template in the message box">Use template</button>
+      <button type="button" class="starter" id="formBtn" title="Fill in the order fields directly">Fill in form</button>
+      <span class="hint">or just type the order</span>
+    </div>
     <form id="form">
       <textarea id="input" rows="1" placeholder="e.g. Offline, sage green 4x1 2 pcs @20rb for Hans, kirim Jumat"></textarea>
       <button class="btn primary" id="sendBtn" type="submit">Send</button>
@@ -477,8 +485,33 @@ startGate(() => {
       }
     });
     input.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); $('form').requestSubmit(); }
+      if (e.key !== 'Enter' || e.shiftKey || e.isComposing) return;
+      // In a multi-line message (e.g. the template) Enter adds a line; Ctrl/Cmd+Enter or the Send button sends.
+      if (input.value.includes('\n') && !(e.ctrlKey || e.metaKey)) return;
+      e.preventDefault(); $('form').requestSubmit();
     });
+
+    /* ---------- template & form starters ---------- */
+    // A fill-in layout for people who don't know what to type. Labels help the sheet script read each part correctly.
+    const TEMPLATE = 'Buyer: \nDelivery date: \nItem:  | Qty:  | Price:  | Notes: ';
+    const tplBtn = $('tplBtn');
+    tplBtn.onclick = () => {
+      if (input.value.trim() && input.value !== TEMPLATE && !confirm('Replace what you typed with the template?')) return;
+      input.value = TEMPLATE; autosize(); input.focus();
+      input.setSelectionRange('Buyer: '.length, 'Buyer: '.length);
+      if (!tplBtn.dataset.shown) {
+        tplBtn.dataset.shown = '1';
+        say('Fill in each line after the ":". Add another "Item:" line for each extra product. Leave Price empty to use the list price. Dates like 22/10 or 22 Okt are fine. Press Send when done.');
+      }
+    };
+    // Skips the chat entirely: an empty order card with every field, ready to fill and save.
+    $('formBtn').onclick = () => {
+      if (draft && cardEl) { cardEl.querySelector('details.edit').open = true; cardEl.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; }
+      draft = { po: nextPo, buyer: '', entryDate: new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10), deliveryDate: '',
+        items: [{ article: '', description: '', qty: '', price: '', notes: '' }] };
+      saveDraft(); renderDraft(true);
+      cardEl.querySelectorAll('.grid input')[1].focus();
+    };
     function autosize() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 140) + 'px'; }
     input.addEventListener('input', autosize);
 
@@ -490,7 +523,7 @@ startGate(() => {
       say('New order. What would you like to enter?');
     };
 
-    function renderDraft() {
+    function renderDraft(openEdit = false) {
       if (cardEl) cardEl.remove();
       if (!draft) return;
       const set = (k) => e => { draft[k] = e.target.value; refreshTotals(); };
@@ -507,7 +540,10 @@ startGate(() => {
         totalEl.textContent = `${fmtQty(qty)} pcs · ${rp(val)}`;
         const w = [];
         if (!draft.items.length) w.push('Add at least one item.');
-        draft.items.forEach((i, n) => { if (!byArticle[String(i.article).toUpperCase()]) w.push(`Item ${n + 1}: article "${i.article || '?'}" is not in Product Database.`); });
+        draft.items.forEach((i, n) => {
+          if (!String(i.article || '').trim()) w.push(`Item ${n + 1}: pick a product (type its article code or name).`);
+          else if (!byArticle[String(i.article).toUpperCase()]) w.push(`Item ${n + 1}: article "${i.article}" is not in Product Database.`);
+        });
         if (!draft.deliveryDate) w.push('Delivery date is empty.');
         if (!draft.buyer) w.push('Buyer is empty.');
         // Offer a one-tap fix when the delivery date ended up in an item's notes.
@@ -550,7 +586,7 @@ startGate(() => {
         h('h2', {}, 'Final template: confirm to save'),
         preview,
         warnEl,
-        h('details', { class: 'edit' },
+        h('details', { class: 'edit', open: openEdit },
           h('summary', {}, 'Edit details'),
           h('div', { class: 'grid' },
             field('PO', 'po'), field('Buyer', 'buyer'),
