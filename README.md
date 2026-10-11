@@ -1,18 +1,21 @@
 # JO Order
 
-Two static web pages for taking orders and tracking production. The data lives in a Google Sheet behind a Google Apps Script web app.
+One static web page (`index.html`) for taking orders and tracking production, with two tabs. The data lives in a Google Sheet behind a Google Apps Script web app.
 
-| Page | What it does |
-|---|---|
-| `index.html` | **Order chat.** Type an order in plain words (e.g. `Offline, sage green 4x1 2 pcs @20rb for Hans, kirim Jumat`). The script turns it into an order template. Confirm it to save it to the *Order* sheet, then copy or send the WhatsApp summary. |
-| `production.html` | **Production board.** Kanban with *In Queue → On Production → Done → Delivered*, estimated finish times and late flags. Refreshes every 30 s. |
+| Tab | Look | What it does |
+|---|---|---|
+| **Order** (`/#order`) | warm cream, red | Type an order in plain words (e.g. `Offline, sage green 4x1 2 pcs @20rb for Hans, kirim Jumat`). The script turns it into an order template. Confirm it to save it to the *Order* sheet, then copy or send the WhatsApp summary. |
+| **Production** (`/#production`) | cool blue, navy header | Kanban with *In Queue → On Production → Done → Delivered*, estimated finish times and late flags. Sort by delivery date: **Soonest first** (default) or **Latest first**; orders without a date go last. Refreshes every 30 s while open. |
 
-There is no build step and no server of your own: the pages are plain HTML that talk to the Apps Script URL, which is already built in.
+`production.html` only redirects to `/#production`, so old links and home-screen shortcuts still work.
+
+There is no build step and no server of your own: the page is plain HTML that talks to the Apps Script URL, which is already built in.
 
 ## Using it
-1. Open the site. A password screen appears.
-2. Enter the password. The page connects to the sheet on its own: the same password is used as the sheet PIN for that tab.
-3. Each new tab or window asks for the password again. Reloading the same tab does not.
+1. Open the site and enter the password once. The same password is used as the sheet PIN, so it connects on its own.
+2. The device stays unlocked for **30 days** (until the password changes). Each device needs the password once.
+3. Press **Lock** in the header to sign a device out (use it on shared phones).
+4. While data loads from the sheet, the logo pulses in place of the content.
 
 If the PIN in Apps Script ever differs from the website password, open ⚙ Settings and enter the PIN there.
 
@@ -27,13 +30,13 @@ There are two locks:
 Extra hardening in the pages:
 - Content-Security-Policy: the page can only talk to `script.google.com` / `script.googleusercontent.com`, and it loads no outside scripts.
 - The PIN is only ever sent to a URL of the form `https://script.google.com/macros/s/…/exec`.
-- The PIN, the chat history and unsaved drafts are kept for the current tab only, so closing the tab clears them. ⚙ Settings has an opt-in "Remember PIN on this device".
+- Chat history and unsaved drafts are kept for the current tab only, so closing the tab clears them. **Lock** forgets both the password and the PIN on that device.
 - `noindex` so search engines do not list the pages; `no-referrer` so the URL does not leak to other sites.
 
 ## Changing the password or script URL
 ```bash
 cp .env.example .env          # first time only, then edit .env
-python scripts/configure.py   # writes the password hash + URL into both pages
+python scripts/configure.py   # writes the password hash + URL into index.html
 git commit -am "Update config" && git push
 ```
 Commit the HTML, **never `.env`** (it is in `.gitignore`). Changing the password signs everyone out.
@@ -61,9 +64,9 @@ The PIN is 6 digits and the URL is in the public HTML, so the script is what has
 
 ## Files
 ```
-index.html            order chat
-production.html       production board
-scripts/configure.py  writes the password hash + script URL into both pages
+index.html            the app (Order + Production tabs)
+production.html       redirect to index.html#production
+scripts/configure.py  writes the password hash + script URL into index.html
 .env.example          template for .env (committed)
 .env                  your secrets (git-ignored)
 ```

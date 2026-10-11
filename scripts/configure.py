@@ -15,7 +15,7 @@ import secrets
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-PAGES = ["index.html", "production.html"]
+PAGES = ["index.html"]
 ITERATIONS = 600_000
 GATE_LINE = re.compile(r"^const GATE = .*; // @gate.*$", re.M)
 URL_LINE = re.compile(r"^const DEFAULT_URL = .*; // @url.*$", re.M)

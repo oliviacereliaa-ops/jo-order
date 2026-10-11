@@ -7,7 +7,7 @@
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex,nofollow">
 <title>JO Order</title>
-<meta name="theme-color" content="#d62d1c">
+<meta name="theme-color" content="#d62d1c" id="themeColor">
 <meta name="application-name" content="JO Order">
 <meta name="apple-mobile-web-app-title" content="JO Order">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,67 +17,155 @@
 <link rel="icon" type="image/png" sizes="192x192" href="data:image/png;base64,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">
 <link rel="apple-touch-icon" sizes="180x180" href="data:image/png;base64,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">
 <style>
+/* Order tab: warm cream + red. Production tab: cool steel blue + navy header. */
 :root{
-  --bg:#f4f1ea;--panel:#fffdf8;--ink:#1f2a24;--muted:#6b726c;--line:#e2ddd1;
+  --bg:#f4f1ea;--panel:#fffdf8;--ink:#1f2a24;--muted:#6b726c;--line:#e2ddd1;--col:#ebe6da;
   --accent:#d62d1c;--accent-ink:#fff;--me:#d62d1c;--me-ink:#fff;--warn:#a5531b;--warn-bg:#fbeee2;
-  --wa:#1f8f4e;--radius:14px;
+  --ok:#2f7a4f;--ok-bg:#e3f1e7;--wa:#1f8f4e;--q:#6b726c;--p:#c77a0a;--d:#2f7a4f;
+  --head:#fffdf8;--head-ink:#1f2a24;--head-line:#e2ddd1;--logo-bg:transparent;--radius:14px;
 }
-@media (prefers-color-scheme:dark){:root{
-  --bg:#141917;--panel:#1d2421;--ink:#e9ece8;--muted:#9aa29c;--line:#2f3833;
-  --accent:#ef5a48;--accent-ink:#fff;--me:#b8261a;--me-ink:#fff;--warn:#f0a36a;--warn-bg:#3a2a1d;--wa:#3fbf73;
-}}
+body[data-view=production]{
+  --bg:#eef2f5;--panel:#fff;--ink:#1b2530;--muted:#64707c;--line:#d9e0e6;--col:#e1e7ed;
+  --accent:#1f6fae;--accent-ink:#fff;--q:#64707c;
+  --head:#1b2a38;--head-ink:#fff;--head-line:rgba(255,255,255,.28);--logo-bg:#fff;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#141917;--panel:#1d2421;--ink:#e9ece8;--muted:#9aa29c;--line:#2f3833;--col:#181e1b;
+    --accent:#ef5a48;--accent-ink:#fff;--me:#b8261a;--me-ink:#fff;--warn:#f0a36a;--warn-bg:#3a2a1d;
+    --ok:#6fcf97;--ok-bg:#1d3326;--wa:#3fbf73;--q:#9aa29c;--p:#f2b84b;--d:#6fcf97;
+    --head:#1d2421;--head-ink:#e9ece8;--head-line:#2f3833;--logo-bg:#fff;
+  }
+  body[data-view=production]{
+    --bg:#11161b;--panel:#1a2129;--ink:#e6ebf0;--muted:#94a0ab;--line:#2a343e;--col:#151b21;
+    --accent:#5aa9e6;--accent-ink:#0b1620;--q:#94a0ab;
+    --head:#0b1117;--head-ink:#e6ebf0;--head-line:#2a343e;
+  }
+}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column}
-header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
-header .logo{height:34px;width:auto;display:block}
-@media (prefers-color-scheme:dark){header .logo{background:#fff;border-radius:7px;padding:4px 6px;height:34px}}
+body{background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;transition:background-color .2s}
+
+/* ---------- header ---------- */
+header{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--head-line);background:var(--head);color:var(--head-ink);flex-wrap:wrap;transition:background-color .2s}
+header .logo{height:34px;width:auto;display:block;background:var(--logo-bg);border-radius:7px;padding:4px 6px}
 header h1{font-size:17px;margin:0;font-weight:650;letter-spacing:.2px}
-header .sub{font-size:12px;color:var(--muted)}
-header .grow{flex:1}
-.icon-btn{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer;text-decoration:none}
-main{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
-.wrap{max-width:720px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:10px}
-.msg{max-width:85%;padding:9px 13px;border-radius:var(--radius);white-space:pre-wrap;word-wrap:break-word}
-.bot{background:var(--panel);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
-.me{background:var(--me);color:var(--me-ink);align-self:flex-end;border-bottom-right-radius:4px}
-.err{border-color:var(--warn);color:var(--warn)}
-.typing{color:var(--muted);font-style:italic}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;align-self:stretch}
-.card h2{font-size:14px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 12px;margin-bottom:12px}
+header .sub{font-size:12px;opacity:.7}
+header .grow{flex:1;min-width:120px}
+.icon-btn{border:1px solid var(--head-line);background:transparent;color:var(--head-ink);border-radius:10px;padding:6px 10px;font:inherit;font-size:13px;cursor:pointer;text-decoration:none;min-width:34px;text-align:center}
+.views{display:inline-flex;border:1px solid var(--head-line);border-radius:999px;padding:3px;gap:2px}
+.views button{border:0;background:transparent;color:var(--head-ink);font:inherit;font-size:13px;font-weight:600;padding:6px 14px;border-radius:999px;cursor:pointer;opacity:.75}
+.views button[aria-selected=true]{background:var(--accent);color:var(--accent-ink);opacity:1}
+@media (max-width:640px){.views{order:9;width:100%}.views button{flex:1}}
+
+/* ---------- views ---------- */
+.view{flex:1;min-height:0;display:none;flex-direction:column}
+body[data-view=order] #orderView,body[data-view=production] #prodView{display:flex}
+body[data-view=order] .for-prod,body[data-view=production] .for-order{display:none!important}
+.scroll{flex:1;overflow:auto;padding:16px}
+
+/* ---------- shared controls ---------- */
 label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);gap:3px}
-input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:7px 9px;width:100%;min-width:0}
-input:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:-1px}
-.item{border-top:1px dashed var(--line);padding:10px 0;display:grid;grid-template-columns:1fr 70px 110px 32px;gap:6px 8px;align-items:end}
-.item .desc{grid-column:1/-1;font-size:13px;font-weight:600}
-.item .desc small{font-weight:400;color:var(--muted)}
-.item .notes{grid-column:1/-2}
-.item .val{grid-column:-2/-1;text-align:right;font-size:12px;color:var(--muted);align-self:center}
-.item .rm{border:none;background:transparent;color:var(--muted);font-size:18px;cursor:pointer;padding:4px}
-.unknown{color:var(--warn)}
-.warn{background:var(--warn-bg);color:var(--warn);border-radius:9px;padding:7px 10px;font-size:13px;margin-top:8px}
-.total{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:10px;margin-top:4px;font-weight:650}
-.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.btn{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
-.btn.wa{background:var(--wa);border-color:var(--wa);color:#fff}
-.btn:disabled{opacity:.5;cursor:default}
-.link{background:none;border:none;color:var(--accent);font:inherit;font-size:13px;cursor:pointer;padding:0}
-details.edit{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
-details.edit summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent);padding:4px 0}
-pre.wa-text{margin:0;white-space:pre-wrap;font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--bg);border-radius:10px;padding:10px 12px}
-footer{border-top:1px solid var(--line);background:var(--panel);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
-footer form{max-width:720px;margin:0 auto;display:flex;gap:8px;align-items:flex-end}
-footer textarea{resize:none;max-height:140px;border-radius:12px}
-dialog{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);color:var(--ink);width:min(440px,calc(100% - 32px));padding:18px}
-dialog::backdrop{background:rgba(0,0,0,.4)}
-dialog h2{margin:0 0 12px;font-size:17px}
-dialog label{margin-bottom:10px}
-.hint{font-size:12px;color:var(--muted)}
+input,textarea,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:7px 9px;width:100%;min-width:0}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
 label.check{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:13px}
 label.check input{width:auto}
-@media (max-width:480px){.grid{grid-template-columns:1fr 1fr}.item{grid-template-columns:1fr 60px 90px 28px}}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;padding:9px 14px;font:inherit;font-weight:600;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.wa{background:var(--wa);border-color:var(--wa);color:#fff}
+.btn.go{background:var(--d);border-color:var(--d);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.hint{font-size:12px;color:var(--muted)}
+dialog{border:1px solid var(--line);border-radius:var(--radius);background:var(--panel);color:var(--ink);width:min(440px,calc(100% - 32px));padding:18px}
+dialog::backdrop{background:rgba(0,0,0,.4)}
+dialog h2{margin:0 0 8px;font-size:17px}
+dialog p{margin:0 0 12px;color:var(--muted);font-size:14px}
+dialog label{margin-bottom:10px}
+dialog .row .btn{flex:1}
+.quick{display:flex;gap:6px;flex-wrap:wrap;margin:-4px 0 12px}
+.quick button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:4px 10px;font:inherit;font-size:12px;cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 14px;border-radius:10px;font-size:14px;max-width:calc(100% - 32px);opacity:0;transition:opacity .2s;pointer-events:none;z-index:9}
+.toast.show{opacity:1}
+.toast.err{background:var(--warn)}
+.loader{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:56px 16px;color:var(--muted);font-size:13px;grid-column:1/-1;align-self:stretch}
+.loader img{height:64px;width:auto;animation:jo-pulse 1.2s ease-in-out infinite;background:var(--logo-bg);border-radius:10px;padding:6px 8px}
+@keyframes jo-pulse{0%,100%{opacity:.35;transform:scale(.92)}50%{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.loader img{animation:none}}
+
+/* ---------- order tab ---------- */
+#orderMain{display:flex;flex-direction:column;gap:10px}
+#orderView .wrap{max-width:720px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+#orderView .msg{max-width:85%;padding:9px 13px;border-radius:var(--radius);white-space:pre-wrap;word-wrap:break-word}
+#orderView .bot{background:var(--panel);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+#orderView .me{background:var(--me);color:var(--me-ink);align-self:flex-end;border-bottom-right-radius:4px}
+#orderView .err{border-color:var(--warn);color:var(--warn)}
+#orderView .typing{color:var(--muted);font-style:italic}
+#orderView .msg .link{font-size:inherit}
+#orderView .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;align-self:stretch}
+#orderView .card h2{font-size:14px;margin:0 0 10px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:600}
+#orderView .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 12px;margin-bottom:12px}
+#orderView .item{border-top:1px dashed var(--line);padding:10px 0;display:grid;grid-template-columns:1fr 70px 110px 32px;gap:6px 8px;align-items:end}
+#orderView .item .desc{grid-column:1/-1;font-size:13px;font-weight:600}
+#orderView .item .desc small{font-weight:400;color:var(--muted)}
+#orderView .item .notes{grid-column:1/-2}
+#orderView .item .val{grid-column:-2/-1;text-align:right;font-size:12px;color:var(--muted);align-self:center}
+#orderView .item .rm{border:none;background:transparent;color:var(--muted);font-size:18px;cursor:pointer;padding:4px}
+#orderView .unknown{color:var(--warn)}
+#orderView .warn{background:var(--warn-bg);color:var(--warn);border-radius:9px;padding:7px 10px;font-size:13px;margin-top:8px;white-space:pre-wrap}
+#orderView .total{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding-top:10px;margin-top:4px;font-weight:650}
+.link{background:none;border:none;color:var(--accent);font:inherit;font-size:13px;cursor:pointer;padding:0;text-decoration:underline}
+#orderView details.edit{margin-top:10px;border-top:1px solid var(--line);padding-top:8px}
+#orderView details.edit summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent);padding:4px 0}
+#orderView pre.wa-text{margin:0;white-space:pre-wrap;font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--bg);border-radius:10px;padding:10px 12px}
+#orderView footer{border-top:1px solid var(--line);background:var(--panel);padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+#orderView footer form{max-width:720px;margin:0 auto;display:flex;gap:8px;align-items:flex-end}
+#orderView footer textarea{resize:none;max-height:140px;border-radius:12px}
+@media (max-width:480px){#orderView .item{grid-template-columns:1fr 60px 90px 28px}}
+
+/* ---------- production tab ---------- */
+#prodView .toolbar{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:10px 16px 0;max-width:1232px;width:100%;margin:0 auto}
+#prodView .toolbar label{flex-direction:row;align-items:center;gap:8px;font-size:13px}
+#prodView .toolbar select{width:auto;padding:5px 8px}
+#prodView .tabs{display:none;gap:6px;padding:10px 16px 0;overflow-x:auto}
+#prodView .tab{flex:1;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:7px 10px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+#prodView .tab[aria-selected=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#prodView .board{display:grid;grid-template-columns:repeat(3,minmax(260px,1fr));gap:14px;max-width:1200px;margin:0 auto;align-items:start}
+#prodView .col{background:var(--col);border-radius:var(--radius);padding:10px;min-height:160px;transition:outline-color .15s;outline:2px dashed transparent;outline-offset:-2px}
+#prodView .col.drop{outline-color:var(--accent)}
+#prodView .col h2{display:flex;align-items:center;gap:8px;font-size:13px;text-transform:uppercase;letter-spacing:.6px;margin:2px 4px 10px;color:var(--muted)}
+#prodView .col h2 .dot{width:9px;height:9px;border-radius:50%}
+#prodView .col h2 .n{margin-left:auto;background:var(--panel);border-radius:999px;padding:1px 9px;font-size:12px;color:var(--ink)}
+#prodView .empty{color:var(--muted);font-size:13px;text-align:center;padding:24px 8px}
+#prodView .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;cursor:grab}
+#prodView .card.busy{opacity:.55;pointer-events:none}
+#prodView .card .top{display:flex;align-items:baseline;gap:8px}
+#prodView .card .po{font-weight:700;font-size:15px}
+#prodView .card .buyer{color:var(--muted);font-size:13px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#prodView .chip{font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px;background:var(--bg);color:var(--muted);white-space:nowrap}
+#prodView .chip.late{background:var(--warn-bg);color:var(--warn)}
+#prodView .card ul{list-style:none;margin:8px 0;padding:0;font-size:13px}
+#prodView .card li{display:flex;gap:6px;padding:2px 0}
+#prodView .card li .q{font-weight:700;min-width:34px}
+#prodView .card li .nt{color:var(--muted)}
+#prodView .meta{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:2px;border-top:1px dashed var(--line);padding-top:8px}
+#prodView .meta b{color:var(--ink);font-weight:600}
+#prodView .meta .late{color:var(--warn);font-weight:600}
+#prodView .meta button{background:none;border:none;color:var(--accent);font:inherit;font-size:12px;cursor:pointer;padding:0;margin-left:4px}
+#prodView .acts{display:flex;gap:6px;margin-top:10px}
+#prodView .acts .btn{border-radius:9px;padding:7px 11px;font-size:13px}
+#prodView .acts .btn.primary,#prodView .acts .btn.go{flex:1}
+#prodView .acts .btn.back{color:var(--muted)}
+@media (max-width:820px){
+  #prodView .tabs{display:flex}
+  #prodView .board{grid-template-columns:1fr}
+  #prodView .col{display:none;background:transparent;padding:0}
+  #prodView .col.active{display:block}
+  #prodView .col h2{display:none}
+  #prodView .card{cursor:default}
+}
+
+/* ---------- password gate ---------- */
 body.locked>:not(#gate){display:none!important}
 body:not(.locked) #gate{display:none}
 #gate{flex:1;display:flex;align-items:center;justify-content:center;padding:16px}
@@ -86,7 +174,7 @@ body:not(.locked) #gate{display:none}
 #gate .gate-err{color:var(--warn);font-size:13px;min-height:1.2em;margin:0}
 </style>
 </head>
-<body class="locked">
+<body class="locked" data-view="order">
 <div id="gate">
   <form id="gateForm" autocomplete="off">
     <h2>JO · Enter password</h2>
@@ -97,30 +185,51 @@ body:not(.locked) #gate{display:none}
     <button class="btn primary" type="submit">Open</button>
   </form>
 </div>
+
 <header>
   <img class="logo" alt="" src="data:image/png;base64,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">
   <div class="grow">
-    <h1>JO Order</h1>
-    <div class="sub" id="status">Not connected</div>
+    <h1><span class="for-order">JO Order</span><span class="for-prod">JO Production</span></h1>
+    <div class="sub"><span class="for-order" id="orderStatus">Not connected</span><span class="for-prod" id="prodStatus">Loading…</span></div>
   </div>
-  <a class="icon-btn" href="./production.html" target="_blank" rel="noopener" title="Open production board">Production</a>
-  <button class="icon-btn" id="newBtn" title="Start a new order">New</button>
+  <nav class="views" role="tablist" aria-label="Section">
+    <button type="button" role="tab" data-view="order">Order</button>
+    <button type="button" role="tab" data-view="production">Production</button>
+  </nav>
+  <button class="icon-btn for-order" id="newBtn" title="Start a new order">New</button>
+  <button class="icon-btn for-prod" id="refreshBtn" title="Refresh" aria-label="Refresh">↻</button>
   <button class="icon-btn" id="setBtn" title="Settings" aria-label="Settings">⚙</button>
+  <button class="icon-btn" id="lockBtn" title="Lock: forget the password on this device">Lock</button>
 </header>
 
-<main id="main"><div class="wrap" id="chat"></div></main>
+<section class="view" id="orderView" role="tabpanel" aria-label="Order">
+  <div class="scroll" id="orderMain"><div class="wrap" id="chat"></div></div>
+  <footer>
+    <form id="form">
+      <textarea id="input" rows="1" placeholder="e.g. Offline, sage green 4x1 2 pcs @20rb for Hans, kirim Jumat"></textarea>
+      <button class="btn primary" id="sendBtn" type="submit">Send</button>
+    </form>
+  </footer>
+</section>
 
-<footer>
-  <form id="form">
-    <textarea id="input" rows="1" placeholder="e.g. Offline, sage green 4x1 2 pcs @20rb for Hans, kirim Jumat"></textarea>
-    <button class="btn primary" id="sendBtn" type="submit">Send</button>
-  </form>
-</footer>
+<section class="view" id="prodView" role="tabpanel" aria-label="Production">
+  <div class="toolbar">
+    <label>Sort by delivery
+      <select id="sortSel">
+        <option value="asc">Soonest first</option>
+        <option value="desc">Latest first</option>
+      </select>
+    </label>
+  </div>
+  <nav class="tabs" id="colTabs" role="tablist"></nav>
+  <div class="scroll"><div class="board" id="board"></div></div>
+</section>
 
+<div class="toast" id="toast"></div>
 <datalist id="articles"></datalist>
 
 <dialog id="settings">
-  <form method="dialog" id="setForm">
+  <form method="dialog">
     <h2>Connect to your sheet</h2>
     <label>Apps Script web app URL
       <input id="cfgUrl" placeholder="https://script.google.com/macros/s/…/exec" required>
@@ -137,16 +246,47 @@ body:not(.locked) #gate{display:none}
   </form>
 </dialog>
 
+<dialog id="estDlg">
+  <form method="dialog">
+    <h2 id="estTitle">Start production</h2>
+    <p id="estSub">When will this order be finished?</p>
+    <label>Estimated finish
+      <input type="datetime-local" id="estInput" required>
+    </label>
+    <div class="quick" id="estQuick"></div>
+    <div class="row">
+      <button class="btn primary" value="ok">Save</button>
+      <button class="btn" value="cancel" formnovalidate>Cancel</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="delDlg">
+  <form method="dialog">
+    <h2 id="delTitle">Mark as delivered?</h2>
+    <p>The card will leave the board. The delivery time is saved in the sheet.</p>
+    <div class="row">
+      <button class="btn go" value="ok">Delivered</button>
+      <button class="btn" value="cancel">Cancel</button>
+    </div>
+  </form>
+</dialog>
+
 <script>
-const GATE = {"salt": "1c6188fdbc4c0d9168bb58d3091d5ac4", "iter": 600000, "hash": "2f9ded760095935c7ae2ea0ae5ab177a2c06613be70b20268cf4465b07ba7800"}; // @gate: generated by scripts/configure.py, do not edit by hand
+const GATE = {"salt": "cde9ba30ee1efa1868f8815b237ccc60", "iter": 600000, "hash": "2562ff8e8b49674e713368fea5f377f3cd1a62a20c8445dcbdca448254d22d27"}; // @gate: generated by scripts/configure.py, do not edit by hand
 const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbzrAohIygflBQauZ5Pv2JR82rPY5IfgI-7S_iDbFlELcuGVQBU2OYmB-Vzs0s6-C5AEOg/exec"; // @url: generated by scripts/configure.py from APPS_SCRIPT_URL
 // Client-side gate: hides the UI from casual visitors. The data itself is protected by the PIN check in Apps Script.
 function startGate(start) {
-  // Unlock lasts for this tab only; every new tab or window asks again.
-  const KEY = 'jo.gate';
+  // Unlock is remembered on this device for 30 days (or until the password changes or Lock is pressed).
+  const KEY = 'jo.gate', TTL = 30 * 864e5;
   const open = () => { document.body.classList.remove('locked'); start(); };
+  document.getElementById('lockBtn').addEventListener('click', () => {
+    try { for (const k of [KEY, 'jo.pin']) { localStorage.removeItem(k); sessionStorage.removeItem(k); } } catch {}
+    location.reload();
+  });
   try {
-    if (GATE.hash && sessionStorage.getItem(KEY) === GATE.hash) return open();
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (s && GATE.hash && s.h === GATE.hash && s.exp > Date.now()) return open();
   } catch {}
   const form = document.getElementById('gateForm'), inp = document.getElementById('gatePw'), err = document.getElementById('gateErr'), btn = form.querySelector('button');
   form.addEventListener('submit', async e => {
@@ -161,9 +301,9 @@ function startGate(start) {
       const hex = [...new Uint8Array(bits)].map(b => b.toString(16).padStart(2, '0')).join('');
       if (hex !== GATE.hash) { err.textContent = 'Wrong password.'; inp.select(); return; }
       try {
-        sessionStorage.setItem(KEY, GATE.hash);
-        // The lock-screen password doubles as the sheet PIN for this tab unless a PIN is already saved.
-        if (!localStorage.getItem('jo.pin') && !sessionStorage.getItem('jo.pin')) sessionStorage.setItem('jo.pin', inp.value);
+        localStorage.setItem(KEY, JSON.stringify({ h: GATE.hash, exp: Date.now() + TTL }));
+        // The lock-screen password doubles as the sheet PIN unless a different PIN is already saved.
+        if (!localStorage.getItem('jo.pin')) localStorage.setItem('jo.pin', sessionStorage.getItem('jo.pin') || inp.value);
       } catch {}
       err.textContent = ''; inp.value = ''; open();
     } catch { err.textContent = 'Could not check the password.'; }
@@ -173,29 +313,27 @@ function startGate(start) {
 </script>
 <script>
 startGate(() => {
+  /* ================= shared ================= */
   const $ = id => document.getElementById(id);
-  const chat = $('chat'), main = $('main'), input = $('input');
   const store = {
     get(k){ try { return localStorage.getItem(k) || ''; } catch { return ''; } },
     set(k,v){ try { localStorage.setItem(k,v); } catch {} }
   };
+  // Order history (buyers, prices) lives only as long as this tab, not on the device.
+  const tabStore = {
+    get(k){ try { return sessionStorage.getItem(k) || ''; } catch { return ''; } },
+    set(k,v){ try { sessionStorage.setItem(k,v); } catch {} }
+  };
+  try { localStorage.removeItem('jo.chat'); localStorage.removeItem('jo.draft'); } catch {}
   // Only ever send the PIN to a Google Apps Script web app.
   const URL_RE = /^https:\/\/script\.google\.com\/(?:a\/macros\/[^/]+|macros)\/s\/[\w-]+\/exec$/;
   const loadPin = () => { try { return localStorage.getItem('jo.pin') || sessionStorage.getItem('jo.pin') || ''; } catch { return ''; } };
   function savePin(pin, remember) {
     try { sessionStorage.setItem('jo.pin', pin); remember ? localStorage.setItem('jo.pin', pin) : localStorage.removeItem('jo.pin'); } catch {}
   }
-  // Order history (buyers, prices) lives only as long as this tab, not on the device.
-  const tabStore = {
-    get(k){ try { return sessionStorage.getItem(k) || ''; } catch { return ''; } },
-    set(k,v){ try { sessionStorage.setItem(k,v); } catch {} }
-  };
-  try { localStorage.removeItem('jo.chat'); localStorage.removeItem('jo.draft'); localStorage.removeItem('jo.gate'); } catch {}
   let cfg = { url: store.get('jo.url') || DEFAULT_URL, pin: loadPin() };
-  let products = [], byArticle = {}, nextPo = '', draft = null, busy = false, cardEl = null, saveBtnRef = null;
-  const CONFIRM_RE = /^\s*(ok|oke|okay|okey|confirm|confirmed|konfirmasi|ya|yes|y|yup|save|simpan|gas|lanjut|setuju|sip|done|deal)\s*[.!]*\s*$/i;
+  const ready = () => !!(cfg.url && cfg.pin);
 
-  /* ---------- helpers ---------- */
   function h(tag, attrs = {}, ...kids) {
     const el = document.createElement(tag);
     for (const [k, v] of Object.entries(attrs)) {
@@ -203,28 +341,15 @@ startGate(() => {
       else if (k === 'class') el.className = v;
       else if (v !== undefined && v !== null && v !== false) el.setAttribute(k, v === true ? '' : v);
     }
-    for (const kid of kids.flat()) if (kid != null) el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+    for (const kid of kids.flat()) if (kid != null && kid !== false) el.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
     return el;
   }
-  const rp = n => 'Rp' + Math.round(Number(n) || 0).toLocaleString('en-US');
-  // Whole Rupiah / pcs only: "20.000", "20,000" and "Rp20000" all mean 20000.
-  const num = v => Number(String(v).replace(/\D/g, '')) || 0;
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  function fmtDate(s) {
-    const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
-    return m ? `${+m[3]} ${MONTHS[+m[2] - 1]} ${m[1]}` : '-';
+  const loaderEl = text => h('div', { class: 'loader', role: 'status' }, h('img', { src: document.querySelector('header .logo').src, alt: '' }), text);
+  function toast(msg, err) {
+    const t = $('toast'); t.textContent = msg; t.className = 'toast show' + (err ? ' err' : '');
+    clearTimeout(toast.t); toast.t = setTimeout(() => t.className = 'toast', err ? 4500 : 2200);
   }
-  const scroll = () => requestAnimationFrame(() => main.scrollTop = main.scrollHeight);
-  let log = [];
-  try { log = JSON.parse(tabStore.get('jo.chat') || '[]'); } catch { log = []; }
-  const saveLog = () => { log = log.slice(-60); tabStore.set('jo.chat', JSON.stringify(log)); };
-  function say(text, who = 'bot', extra = '', keep = extra !== 'typing') {
-    const el = h('div', { class: `msg ${who} ${extra}` }, text);
-    chat.append(el); scroll();
-    if (keep) { log.push({ t: 'msg', text, who, extra }); saveLog(); }
-    return el;
-  }
-  const saveDraft = () => tabStore.set('jo.draft', draft ? JSON.stringify(draft) : '');
 
   async function api(action, data = {}) {
     if (!cfg.url) throw new Error('Open Settings and paste your Apps Script URL first.');
@@ -234,13 +359,13 @@ startGate(() => {
     let res;
     try {
       res = await fetch(cfg.url, {
-      signal: ctrl.signal,
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ action, pin: cfg.pin, ...data })
+        signal: ctrl.signal,
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action, pin: cfg.pin, ...data })
       });
     } catch (e) {
-      if (e.name === 'AbortError') throw new Error('No answer from the sheet after 60 seconds. Open Apps Script and run testSetup to see what is wrong.');
+      if (e.name === 'AbortError') throw new Error('No answer from the sheet after 60 seconds. Try again, or open Apps Script and run testSetup.');
       throw new Error('Could not reach the sheet: ' + e.message + '. Check the URL in Settings.');
     } finally { clearTimeout(timer); }
     const json = await res.json().catch(() => { throw new Error('The script did not return JSON. Check the deployment access is "Anyone".'); });
@@ -248,216 +373,448 @@ startGate(() => {
     return json;
   }
 
-  /* ---------- connect ---------- */
-  async function connect() {
-    $('status').textContent = 'Connecting…';
-    try {
-      const r = await api('init');
-      products = r.products; nextPo = r.nextPo;
-      byArticle = Object.fromEntries(products.map(p => [p.article.toUpperCase(), p]));
-      $('articles').replaceChildren(...products.map(p => h('option', { value: p.article }, `${p.article} · ${p.description}`)));
-      if (draft && !cardEl) renderDraft();
-      $('status').textContent = `${products.length} product${products.length === 1 ? "" : "s"} · next PO ${nextPo}`;
-      return true;
-    } catch (e) {
-      $('status').textContent = 'Not connected';
-      say(e.message, 'bot', 'err');
-      return false;
+  /* ================= order tab ================= */
+  const order = (() => {
+    const chat = $('chat'), main = $('orderMain'), input = $('input');
+    let products = [], byArticle = {}, nextPo = '', draft = null, busy = false, cardEl = null, saveBtnRef = null;
+    const CONFIRM_RE = /^\s*(ok|oke|okay|okey|confirm|confirmed|konfirmasi|ya|yes|y|yup|save|simpan|gas|lanjut|setuju|sip|done|deal)\s*[.!]*\s*$/i;
+    const rp = n => 'Rp' + Math.round(Number(n) || 0).toLocaleString('en-US');
+    // Whole Rupiah / pcs only: "20.000", "20,000" and "Rp20000" all mean 20000.
+    const num = v => Number(String(v).replace(/\D/g, '')) || 0;
+    function fmtDate(s) {
+      const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+      return m ? `${+m[3]} ${MONTHS[+m[2] - 1]} ${m[1]}` : '-';
     }
+    const scroll = () => requestAnimationFrame(() => main.scrollTop = main.scrollHeight);
+    const status = () => { $('orderStatus').textContent = `${products.length} product${products.length === 1 ? '' : 's'} · next PO ${nextPo}`; };
+    let log = [];
+    try { log = JSON.parse(tabStore.get('jo.chat') || '[]'); } catch { log = []; }
+    const saveLog = () => { log = log.slice(-60); tabStore.set('jo.chat', JSON.stringify(log)); };
+    function say(text, who = 'bot', extra = '', keep = extra !== 'typing') {
+      const el = h('div', { class: `msg ${who} ${extra}` }, text);
+      chat.append(el); scroll();
+      if (keep) { log.push({ t: 'msg', text, who, extra }); saveLog(); }
+      return el;
+    }
+    const saveDraft = () => tabStore.set('jo.draft', draft ? JSON.stringify(draft) : '');
+
+    async function connect() {
+      $('orderStatus').textContent = 'Connecting…';
+      const loader = products.length ? null : chat.appendChild(loaderEl('Loading products from the sheet…'));
+      scroll();
+      try {
+        const r = await api('init');
+        products = r.products; nextPo = r.nextPo;
+        byArticle = Object.fromEntries(products.map(p => [p.article.toUpperCase(), p]));
+        $('articles').replaceChildren(...products.map(p => h('option', { value: p.article }, `${p.article} · ${p.description}`)));
+        if (draft && !cardEl) renderDraft();
+        status();
+        return true;
+      } catch (e) {
+        $('orderStatus').textContent = 'Not connected';
+        say(e.message, 'bot', 'err');
+        return false;
+      } finally {
+        if (loader) loader.remove();
+      }
+    }
+
+    $('form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const text = input.value.trim();
+      if (!text || busy) return;
+      input.value = ''; autosize();
+      say(text, 'me');
+      if (draft && cardEl && CONFIRM_RE.test(text)) { confirmSave(saveBtnRef); return; }
+      busy = true; $('sendBtn').disabled = true;
+      const typing = say('Reading your order…', 'bot', 'typing');
+      try {
+        const r = await api('parse', { text, draft });
+        typing.remove();
+        draft = { po: (draft && draft.po) || nextPo, ...r.order }; saveDraft();
+        if (r.reply) say(r.reply);
+        renderDraft();
+      } catch (err) {
+        typing.remove(); say(err.message, 'bot', 'err');
+      } finally {
+        busy = false; $('sendBtn').disabled = false; input.focus();
+      }
+    });
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); $('form').requestSubmit(); }
+    });
+    function autosize() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 140) + 'px'; }
+    input.addEventListener('input', autosize);
+
+    $('newBtn').onclick = () => {
+      if (draft && cardEl && !confirm('Discard the unsaved order?')) return;
+      if (cardEl) cardEl.remove();
+      cardEl = null; draft = null; saveDraft();
+      chat.replaceChildren(); log = []; saveLog();
+      say('New order. What would you like to enter?');
+    };
+
+    function renderDraft() {
+      if (cardEl) cardEl.remove();
+      if (!draft) return;
+      const set = (k) => e => { draft[k] = e.target.value; refreshTotals(); };
+      const field = (lbl, k, type = 'text') => h('label', {}, lbl, h('input', { type, value: draft[k] || '', oninput: set(k) }));
+
+      const items = h('div');
+      const totalEl = h('span'), warnEl = h('div');
+      const preview = h('pre', { class: 'wa-text' });
+      function refreshTotals() {
+        saveDraft();
+        preview.textContent = waText(draft.po || nextPo, normalized());
+        const qty = draft.items.reduce((s, i) => s + num(i.qty), 0);
+        const val = draft.items.reduce((s, i) => s + num(i.qty) * num(i.price), 0);
+        totalEl.textContent = `${qty} pcs · ${rp(val)}`;
+        const w = [];
+        if (!draft.items.length) w.push('Add at least one item.');
+        draft.items.forEach((i, n) => { if (!byArticle[String(i.article).toUpperCase()]) w.push(`Item ${n + 1}: article "${i.article || '?'}" is not in Product Database.`); });
+        if (!draft.deliveryDate) w.push('Delivery date is empty.');
+        if (!draft.buyer) w.push('Buyer is empty.');
+        warnEl.replaceChildren(...(w.length ? [h('div', { class: 'warn' }, w.join('\n'))] : []));
+      }
+      function drawItems() {
+        items.replaceChildren(...draft.items.map((it, idx) => {
+          const p = byArticle[String(it.article).toUpperCase()];
+          const desc = h('div', { class: 'desc' + (p ? '' : ' unknown') },
+            p ? p.description : (it.description || 'Unknown product'),
+            p ? h('small', {}, `  ${p.category} / ${p.subCat} · list ${rp(p.price)}`) : null);
+          const val = h('div', { class: 'val' }, rp(num(it.qty) * num(it.price)));
+          const upd = (k) => e => {
+            it[k] = e.target.value;
+            if (k === 'article') {
+              const np = byArticle[it.article.trim().toUpperCase()];
+              if (np) { it.description = np.description; it.price = np.price; drawItems(); refreshTotals(); return; }
+            }
+            val.textContent = rp(num(it.qty) * num(it.price)); refreshTotals();
+          };
+          return h('div', { class: 'item' }, desc,
+            h('label', {}, 'Article', h('input', { list: 'articles', value: it.article || '', onchange: upd('article') })),
+            h('label', {}, 'Qty', h('input', { inputmode: 'numeric', value: it.qty, oninput: upd('qty') })),
+            h('label', {}, 'Price', h('input', { inputmode: 'numeric', value: it.price, oninput: upd('price') })),
+            h('button', { class: 'rm', type: 'button', title: 'Remove', onclick: () => { draft.items.splice(idx, 1); drawItems(); refreshTotals(); } }, '×'),
+            h('label', { class: 'notes' }, 'Notes', h('input', { value: it.notes || '', oninput: upd('notes') })),
+            val);
+        }));
+      }
+      drawItems();
+
+      const saveBtn = h('button', { class: 'btn primary', type: 'button', onclick: () => confirmSave(saveBtn) }, 'Confirm & save to sheet');
+      cardEl = h('div', { class: 'card' },
+        h('h2', {}, 'Final template: confirm to save'),
+        preview,
+        warnEl,
+        h('details', { class: 'edit' },
+          h('summary', {}, 'Edit details'),
+          h('div', { class: 'grid' },
+            field('PO', 'po'), field('Buyer', 'buyer'),
+            field('Entry date', 'entryDate', 'date'), field('Delivery date', 'deliveryDate', 'date')),
+          items,
+          h('button', { class: 'link', type: 'button', onclick: () => { draft.items.push({ article: '', description: '', qty: 1, price: 0, notes: '' }); drawItems(); refreshTotals(); } }, '+ Add item'),
+          h('div', { class: 'total' }, h('span', {}, 'Total'), totalEl)),
+        h('div', { class: 'row' }, saveBtn,
+          h('button', { class: 'btn', type: 'button', onclick: () => $('newBtn').click() }, 'Discard')),
+        h('p', { class: 'hint' }, 'Type "ok" or "confirm" to save it to the sheet, or keep chatting to change it (e.g. "qty jadi 5", "tambah 6x1 1 pcs").'));
+      saveBtnRef = saveBtn;
+      refreshTotals();
+      chat.append(cardEl); scroll();
+    }
+
+    function normalized() {
+      return { ...draft, items: draft.items.map(i => {
+        const p = byArticle[String(i.article).toUpperCase()];
+        return { ...i, description: p ? p.description : (i.description || '?'), qty: num(i.qty), price: num(i.price) };
+      }) };
+    }
+
+    async function confirmSave(btn) {
+      const bad = draft.items.find(i => !byArticle[String(i.article).toUpperCase()] || !(num(i.qty) > 0));
+      if (!draft.items.length || bad) { say('Fix the items marked in the card before saving.', 'bot', 'err'); return; }
+      if (busy) return;
+      busy = true; btn.disabled = true; btn.textContent = 'Saving…';
+      const typing = say('Saving to the Order sheet…', 'bot', 'typing');
+      try {
+        const r = await api('submit', { order: normalized() });
+        typing.remove();
+        nextPo = r.nextPo; status();
+        cardEl.remove(); cardEl = null; draft = null; saveDraft();
+        say(`Saved ${r.rowsAdded} row${r.rowsAdded > 1 ? 's' : ''} to the Order sheet as #${r.po}.`);
+        showWhatsApp(waText(r.po, r.order));
+        log.push({ t: 'wa', text: waText(r.po, r.order) }); saveLog();
+        chat.append(h('div', { class: 'msg bot' }, `#${r.po} is now In Queue on the `,
+          h('button', { class: 'link', type: 'button', onclick: () => setView('production') }, 'Production board'), '.'));
+        scroll();
+        prod.stale();
+      } catch (err) {
+        typing.remove();
+        btn.disabled = false; btn.textContent = 'Confirm & save to sheet';
+        say(err.message, 'bot', 'err');
+      } finally {
+        busy = false;
+      }
+    }
+
+    function waText(po, o) {
+      const qty = o.items.reduce((s, i) => s + i.qty, 0);
+      const total = o.items.reduce((s, i) => s + i.qty * i.price, 0);
+      const lines = [
+        `*ORDER #${po}*`,
+        `Buyer: ${o.buyer || '-'}`,
+        `Order date: ${fmtDate(o.entryDate)}`,
+        `Delivery: ${fmtDate(o.deliveryDate)}`,
+        ''
+      ];
+      o.items.forEach((i, n) => {
+        lines.push(`${n + 1}. ${i.article} · ${i.description}`);
+        lines.push(`   ${i.qty} pcs × ${rp(i.price)} = ${rp(i.qty * i.price)}`);
+        if (i.notes) lines.push(`   Note: ${i.notes}`);
+      });
+      lines.push('', `*Total: ${qty} pcs · ${rp(total)}*`);
+      return lines.join('\n');
+    }
+    function showWhatsApp(text) {
+      const copyBtn = h('button', { class: 'btn', type: 'button', onclick: async () => {
+        try { await navigator.clipboard.writeText(text); copyBtn.textContent = 'Copied'; }
+        catch { const r = document.createRange(); r.selectNodeContents(pre); getSelection().removeAllRanges(); getSelection().addRange(r); copyBtn.textContent = 'Selected: press copy'; }
+        setTimeout(() => copyBtn.textContent = 'Copy', 1800);
+      } }, 'Copy');
+      const pre = h('pre', { class: 'wa-text' }, text);
+      chat.append(h('div', { class: 'card' },
+        h('h2', {}, 'WhatsApp message'), pre,
+        h('div', { class: 'row' }, copyBtn,
+          h('a', { class: 'btn wa', href: 'https://wa.me/?text=' + encodeURIComponent(text), target: '_blank', rel: 'noopener' }, 'Open in WhatsApp'))));
+      scroll();
+    }
+
+    function start() {
+      if (log.length) {
+        const old = log; log = [];
+        old.forEach(m => m.t === 'wa' ? (showWhatsApp(m.text), log.push(m)) : say(m.text, m.who, m.extra));
+        try { draft = JSON.parse(tabStore.get('jo.draft') || 'null'); } catch { draft = null; }
+      } else {
+        say('Hi! Type an order the way you would in a chat: buyer, products, quantity, price if different, names, delivery date. I will turn it into the order template for you to confirm.');
+      }
+      if (ready()) connect();
+    }
+    return { start, connect, say };
+  })();
+
+  /* ================= production tab ================= */
+  const prod = (() => {
+    const COLS = [
+      { key: 'In Queue', label: 'In Queue', color: 'var(--q)' },
+      { key: 'On Production', label: 'On Production', color: 'var(--p)' },
+      { key: 'Done', label: 'Done', color: 'var(--d)' }
+    ];
+    let cards = [], activeCol = store.get('jo.tab') || 'In Queue', busyPo = null, loading = false, loaded = false, isStale = false;
+    // Delivery sort: "asc" = soonest deadline first (default), "desc" = latest first. Orders without a date go last.
+    let sortDir = store.get('jo.sort') === 'desc' ? 'desc' : 'asc';
+    $('sortSel').value = sortDir;
+    $('sortSel').addEventListener('change', e => { sortDir = e.target.value; store.set('jo.sort', sortDir); render(); });
+    const byDelivery = (a, b) => {
+      if (!a.delivery !== !b.delivery) return a.delivery ? -1 : 1;
+      const d = String(a.delivery || '').localeCompare(String(b.delivery || ''));
+      return (sortDir === 'asc' ? d : -d) || String(a.queuedAt || '').localeCompare(String(b.queuedAt || ''));
+    };
+
+    // All times are Jakarta local "YYYY-MM-DDTHH:mm"; compare as Jakarta wall-clock.
+    const parse = s => { const m = String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/); return m ? Date.UTC(+m[1], m[2]-1, +m[3], +(m[4]||0), +(m[5]||0)) : null; };
+    const nowJkt = () => Date.now() + 7 * 3600e3;
+    const fmtDay = s => { const m = String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? `${+m[3]} ${MONTHS[m[2]-1]}` : '-'; };
+    const fmtDT = s => { const m = String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/); return m ? `${+m[3]} ${MONTHS[m[2]-1]} ${m[4]}:${m[5]}` : '-'; };
+    function ago(s) {
+      const t = parse(s); if (t == null) return '';
+      const min = Math.round((nowJkt() - t) / 60000);
+      if (min < 1) return 'just now';
+      if (min < 60) return `${min}m ago`;
+      const hr = Math.floor(min / 60); if (hr < 24) return `${hr}h ${min % 60}m ago`;
+      return `${Math.floor(hr / 24)}d ${hr % 24}h ago`;
+    }
+    function until(s) {
+      const t = parse(s); if (t == null) return { text: '', late: false };
+      const min = Math.round((t - nowJkt()) / 60000), a = Math.abs(min);
+      const span = a < 60 ? `${a}m` : a < 1440 ? `${Math.floor(a/60)}h ${a%60}m` : `${Math.floor(a/1440)}d ${Math.floor(a%1440/60)}h`;
+      return min >= 0 ? { text: `in ${span}`, late: false } : { text: `${span} late`, late: true };
+    }
+
+    async function load(quiet) {
+      if (loading || busyPo) return;
+      loading = true;
+      if (!quiet) $('prodStatus').textContent = 'Loading…';
+      try {
+        const r = await api('board');
+        cards = r.cards; loaded = true; isStale = false; render();
+        $('prodStatus').textContent = `${cards.length} active order${cards.length === 1 ? '' : 's'} · updated ${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hour12:false})}`;
+      } catch (e) {
+        $('prodStatus').textContent = 'Not connected';
+        if (!quiet) toast(e.message, true);
+        if (!loaded) { loaded = true; render(); }
+      } finally { loading = false; }
+    }
+
+    function render() {
+      if (!loaded) { $('colTabs').replaceChildren(); $('board').replaceChildren(loaderEl('Loading orders from the sheet…')); return; }
+      const by = Object.fromEntries(COLS.map(c => [c.key, []]));
+      cards.forEach(c => by[c.status] && by[c.status].push(c));
+      COLS.forEach(c => by[c.key].sort(byDelivery));
+
+      $('colTabs').replaceChildren(...COLS.map(c => h('button', { class: 'tab', role: 'tab', 'aria-selected': String(activeCol === c.key),
+        onclick: () => { activeCol = c.key; store.set('jo.tab', c.key); render(); } }, `${c.label} (${by[c.key].length})`)));
+
+      $('board').replaceChildren(...COLS.map(c => {
+        const col = h('section', { class: 'col' + (activeCol === c.key ? ' active' : ''), 'data-stage': c.key },
+          h('h2', {}, h('span', { class: 'dot', style: `background:${c.color}` }), c.label, h('span', { class: 'n' }, by[c.key].length)),
+          by[c.key].length ? by[c.key].map(cardEl) : h('div', { class: 'empty' }, c.key === 'In Queue' ? 'No orders waiting. New orders appear here.' : 'Nothing here.'));
+        col.addEventListener('dragover', e => { e.preventDefault(); col.classList.add('drop'); });
+        col.addEventListener('dragleave', () => col.classList.remove('drop'));
+        col.addEventListener('drop', e => { e.preventDefault(); col.classList.remove('drop');
+          const card = cards.find(x => x.po === e.dataTransfer.getData('text/plain')); if (card) request(card, c.key); });
+        return col;
+      }));
+    }
+
+    function deliveryChip(c) {
+      if (!c.delivery) return h('span', { class: 'chip' }, 'no delivery date');
+      const days = Math.round((parse(c.delivery) - parse(new Date(nowJkt()).toISOString().slice(0, 10))) / 864e5);
+      const txt = days < 0 ? `due ${fmtDay(c.delivery)} · ${-days}d late` : days === 0 ? 'due today' : days === 1 ? 'due tomorrow' : `due ${fmtDay(c.delivery)}`;
+      return h('span', { class: 'chip' + (days <= 0 ? ' late' : '') }, txt);
+    }
+
+    function cardEl(c) {
+      const el = h('article', { class: 'card' + (busyPo === c.po ? ' busy' : ''), draggable: 'true' },
+        h('div', { class: 'top' }, h('span', { class: 'po' }, '#' + c.po), h('span', { class: 'buyer' }, c.buyer || '-'), deliveryChip(c)),
+        h('ul', {}, c.items.map(i => h('li', {}, i.qty !== '' ? h('span', { class: 'q' }, i.qty + '×') : null,
+          h('span', {}, i.description, i.notes ? h('span', { class: 'nt' }, ' · ' + i.notes) : null)))),
+        metaEl(c), actsEl(c));
+      el.addEventListener('dragstart', e => e.dataTransfer.setData('text/plain', c.po));
+      return el;
+    }
+
+    function metaEl(c) {
+      const m = h('div', { class: 'meta' });
+      m.append(h('div', {}, 'Queued ', h('b', {}, fmtDT(c.queuedAt)), ` · ${ago(c.queuedAt)}`));
+      if (c.status !== 'In Queue') m.append(h('div', {}, 'Started ', h('b', {}, fmtDT(c.startedAt)), ` · ${ago(c.startedAt)}`));
+      if (c.status === 'On Production') {
+        const u = until(c.est);
+        m.append(h('div', {}, 'Est. finish ', h('b', {}, fmtDT(c.est)), ' · ', h('span', { class: u.late ? 'late' : '' }, u.text),
+          h('button', { type: 'button', onclick: () => askEst(c, 'edit') }, 'change')));
+      }
+      if (c.status === 'Done') {
+        const late = c.est && parse(c.doneAt) > parse(c.est);
+        m.append(h('div', {}, 'Done ', h('b', {}, fmtDT(c.doneAt)), ` · ${ago(c.doneAt)}`,
+          c.est ? h('span', { class: late ? 'late' : '' }, late ? ' · after estimate' : ' · on time') : null));
+      }
+      m.append(h('div', {}, `${c.qty} pcs`));
+      return m;
+    }
+
+    function actsEl(c) {
+      if (c.status === 'In Queue') return h('div', { class: 'acts' },
+        h('button', { class: 'btn primary', onclick: () => request(c, 'On Production') }, 'Start production →'));
+      if (c.status === 'On Production') return h('div', { class: 'acts' },
+        h('button', { class: 'btn back', title: 'Back to queue', onclick: () => request(c, 'In Queue') }, '←'),
+        h('button', { class: 'btn primary', onclick: () => request(c, 'Done') }, 'Mark done →'));
+      return h('div', { class: 'acts' },
+        h('button', { class: 'btn back', title: 'Back to production', onclick: () => request(c, 'On Production') }, '←'),
+        h('button', { class: 'btn go', onclick: () => request(c, 'Delivered') }, 'Delivered ✓'));
+    }
+
+    function request(c, to) {
+      if (c.status === to || busyPo) return;
+      if (to === 'On Production' && c.status === 'In Queue') return askEst(c, 'start');
+      if (to === 'Delivered') return askDelivered(c);
+      move(c, to);
+    }
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function localStr(ms) { const d = new Date(ms); return `${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())}T${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`; }
+    function askEst(c, mode) {
+      const dlg = $('estDlg'), inp = $('estInput');
+      $('estTitle').textContent = mode === 'start' ? `Start production #${c.po}` : `Change estimate #${c.po}`;
+      $('estSub').textContent = 'Estimated finish time is required.';
+      const base = nowJkt(), today17 = parse(new Date(base).toISOString().slice(0, 10) + 'T17:00');
+      inp.min = localStr(base);
+      inp.value = c.est || localStr(base + 4 * 3600e3 - (base % 900000));
+      $('estQuick').replaceChildren(...[
+        ['+2 hours', base + 2 * 3600e3], ['+4 hours', base + 4 * 3600e3],
+        ['Today 17:00', today17], ['Tomorrow 17:00', today17 + 864e5],
+        ...(c.delivery ? [['Delivery day 12:00', parse(c.delivery + 'T12:00')]] : [])
+      ].filter(([, t]) => t > base).map(([lbl, t]) => h('button', { type: 'button', onclick: () => inp.value = localStr(t - (t % 300000)) }, lbl)));
+      dlg.returnValue = '';
+      dlg.onclose = () => {
+        if (dlg.returnValue !== 'ok' || !inp.value) return;
+        mode === 'start' ? move(c, 'On Production', inp.value) : setEst(c, inp.value);
+      };
+      dlg.showModal();
+    }
+    function askDelivered(c) {
+      const dlg = $('delDlg');
+      $('delTitle').textContent = `Mark #${c.po} as delivered?`;
+      dlg.returnValue = '';
+      dlg.onclose = () => { if (dlg.returnValue === 'ok') move(c, 'Delivered'); };
+      dlg.showModal();
+    }
+
+    async function move(c, to, est) {
+      busyPo = c.po; render();
+      try {
+        const r = await api('move', { po: c.po, to, est });
+        busyPo = null; cards = r.cards; render();
+        toast(to === 'Delivered' ? `#${c.po} delivered ✓` : `#${c.po} → ${to}`);
+        if (to !== 'Delivered' && window.matchMedia('(max-width:820px)').matches) { activeCol = to; store.set('jo.tab', to); render(); }
+      } catch (e) {
+        busyPo = null; render(); toast(e.message, true); load(true);
+      }
+    }
+    async function setEst(c, est) {
+      busyPo = c.po; render();
+      try { const r = await api('setEst', { po: c.po, est }); busyPo = null; cards = r.cards; render(); toast(`#${c.po} estimate updated`); }
+      catch (e) { busyPo = null; render(); toast(e.message, true); }
+    }
+
+    const visible = () => !document.hidden && document.body.dataset.view === 'production';
+    $('refreshBtn').onclick = () => load();
+    setInterval(() => { if (visible()) load(true); }, 30000);
+    setInterval(() => { if (visible() && !busyPo && !document.querySelector('dialog[open]')) render(); }, 60000);
+    document.addEventListener('visibilitychange', () => { if (visible()) load(true); });
+
+    function start() { render(); if (ready()) load(); else { loaded = true; render(); } }
+    function show() { if (ready() && (isStale || loaded)) load(true); }
+    return { start, load, show, stale: () => { isStale = true; } };
+  })();
+
+  /* ================= tabs, settings, start ================= */
+  function setView(v) {
+    v = v === 'production' ? 'production' : 'order';
+    document.body.dataset.view = v;
+    store.set('jo.view', v);
+    if (location.hash !== '#' + v) history.replaceState(null, '', '#' + v);
+    document.title = v === 'production' ? 'JO Production' : 'JO Order';
+    $('themeColor').content = v === 'production' ? '#1b2a38' : '#d62d1c';
+    document.querySelectorAll('.views button').forEach(b => b.setAttribute('aria-selected', String(b.dataset.view === v)));
+    if (v === 'production') prod.show();
   }
+  document.querySelectorAll('.views button').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+  window.addEventListener('hashchange', () => setView(location.hash.slice(1)));
 
   $('setBtn').onclick = () => { $('cfgUrl').value = cfg.url; $('cfgPin').value = cfg.pin; $('cfgRemember').checked = !!store.get('jo.pin'); $('settings').showModal(); };
   $('settings').addEventListener('close', async () => {
     if ($('settings').returnValue !== 'save') return;
     const url = $('cfgUrl').value.trim();
-    if (!URL_RE.test(url)) { say('That is not an Apps Script web app URL. It should look like https://script.google.com/macros/s/…/exec', 'bot', 'err'); return; }
+    if (!URL_RE.test(url)) { toast('That is not an Apps Script web app URL (https://script.google.com/macros/s/…/exec).', true); return; }
     cfg = { url, pin: $('cfgPin').value.trim() };
     store.set('jo.url', cfg.url); savePin(cfg.pin, $('cfgRemember').checked);
-    if (await connect()) say('Connected. Type an order whenever you are ready.');
+    prod.load();
+    if (await order.connect()) order.say('Connected. Type an order whenever you are ready.');
   });
 
-  /* ---------- chat ---------- */
-  $('form').addEventListener('submit', async e => {
-    e.preventDefault();
-    const text = input.value.trim();
-    if (!text || busy) return;
-    input.value = ''; autosize();
-    say(text, 'me');
-    if (draft && cardEl && CONFIRM_RE.test(text)) { confirmSave(saveBtnRef); return; }
-    busy = true; $('sendBtn').disabled = true;
-    const typing = say('Reading your order…', 'bot', 'typing');
-    try {
-      const r = await api('parse', { text, draft });
-      typing.remove();
-      draft = { po: (draft && draft.po) || nextPo, ...r.order }; saveDraft();
-      if (r.reply) say(r.reply);
-      renderDraft();
-    } catch (err) {
-      typing.remove(); say(err.message, 'bot', 'err');
-    } finally {
-      busy = false; $('sendBtn').disabled = false; input.focus();
-    }
-  });
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); $('form').requestSubmit(); }
-  });
-  function autosize() { input.style.height = 'auto'; input.style.height = Math.min(input.scrollHeight, 140) + 'px'; }
-  input.addEventListener('input', autosize);
-
-  $('newBtn').onclick = () => {
-    if (draft && cardEl && !confirm('Discard the unsaved order?')) return;
-    if (cardEl) cardEl.remove();
-    cardEl = null; draft = null; saveDraft();
-    chat.replaceChildren(); log = []; saveLog();
-    say('New order. What would you like to enter?');
-  };
-
-  /* ---------- draft card ---------- */
-  function renderDraft() {
-    if (cardEl) cardEl.remove();
-    if (!draft) return;
-    const set = (k) => e => { draft[k] = e.target.value; refreshTotals(); };
-    const field = (lbl, k, type = 'text') => h('label', {}, lbl, h('input', { type, value: draft[k] || '', oninput: set(k) }));
-
-    const items = h('div');
-    const totalEl = h('span'), warnEl = h('div');
-    const preview = h('pre', { class: 'wa-text' });
-    function refreshTotals() {
-      saveDraft();
-      preview.textContent = waText(draft.po || nextPo, normalized());
-      const qty = draft.items.reduce((s, i) => s + num(i.qty), 0);
-      const val = draft.items.reduce((s, i) => s + num(i.qty) * num(i.price), 0);
-      totalEl.textContent = `${qty} pcs · ${rp(val)}`;
-      const w = [];
-      if (!draft.items.length) w.push('Add at least one item.');
-      draft.items.forEach((i, n) => { if (!byArticle[String(i.article).toUpperCase()]) w.push(`Item ${n + 1}: article "${i.article || '?'}" is not in Product Database.`); });
-      if (!draft.deliveryDate) w.push('Delivery date is empty.');
-      if (!draft.buyer) w.push('Buyer is empty.');
-      warnEl.replaceChildren(...(w.length ? [h('div', { class: 'warn' }, w.join('\n'))] : []));
-      warnEl.style.whiteSpace = 'pre-wrap';
-    }
-    function drawItems() {
-      items.replaceChildren(...draft.items.map((it, idx) => {
-        const p = byArticle[String(it.article).toUpperCase()];
-        const desc = h('div', { class: 'desc' + (p ? '' : ' unknown') },
-          p ? p.description : (it.description || 'Unknown product'),
-          p ? h('small', {}, `  ${p.category} / ${p.subCat} · list ${rp(p.price)}`) : null);
-        const val = h('div', { class: 'val' }, rp(num(it.qty) * num(it.price)));
-        const upd = (k) => e => {
-          it[k] = e.target.value;
-          if (k === 'article') {
-            const np = byArticle[it.article.trim().toUpperCase()];
-            if (np) { it.description = np.description; it.price = np.price; drawItems(); refreshTotals(); return; }
-          }
-          val.textContent = rp(num(it.qty) * num(it.price)); refreshTotals();
-        };
-        return h('div', { class: 'item' }, desc,
-          h('label', {}, 'Article', h('input', { list: 'articles', value: it.article || '', onchange: upd('article') })),
-          h('label', {}, 'Qty', h('input', { inputmode: 'numeric', value: it.qty, oninput: upd('qty') })),
-          h('label', {}, 'Price', h('input', { inputmode: 'numeric', value: it.price, oninput: upd('price') })),
-          h('button', { class: 'rm', type: 'button', title: 'Remove', onclick: () => { draft.items.splice(idx, 1); drawItems(); refreshTotals(); } }, '×'),
-          h('label', { class: 'notes' }, 'Notes', h('input', { value: it.notes || '', oninput: upd('notes') })),
-          val);
-      }));
-    }
-    drawItems();
-
-    const saveBtn = h('button', { class: 'btn primary', type: 'button', onclick: () => confirmSave(saveBtn) }, 'Confirm & save to sheet');
-    cardEl = h('div', { class: 'card' },
-      h('h2', {}, 'Final template: confirm to save'),
-      preview,
-      warnEl,
-      h('details', { class: 'edit' },
-        h('summary', {}, 'Edit details'),
-        h('div', { class: 'grid' },
-          field('PO', 'po'), field('Buyer', 'buyer'),
-          field('Entry date', 'entryDate', 'date'), field('Delivery date', 'deliveryDate', 'date')),
-        items,
-        h('button', { class: 'link', type: 'button', onclick: () => { draft.items.push({ article: '', description: '', qty: 1, price: 0, notes: '' }); drawItems(); refreshTotals(); } }, '+ Add item'),
-        h('div', { class: 'total' }, h('span', {}, 'Total'), totalEl)),
-      h('div', { class: 'row' }, saveBtn,
-        h('button', { class: 'btn', type: 'button', onclick: () => $('newBtn').click() }, 'Discard')),
-      h('p', { class: 'hint' }, 'Type "ok" or "confirm" to save it to the sheet, or keep chatting to change it (e.g. "qty jadi 5", "tambah 6x1 1 pcs").'));
-    saveBtnRef = saveBtn;
-    refreshTotals();
-    chat.append(cardEl); scroll();
-  }
-
-  function normalized() {
-    return { ...draft, items: draft.items.map(i => {
-      const p = byArticle[String(i.article).toUpperCase()];
-      return { ...i, description: p ? p.description : (i.description || '?'), qty: num(i.qty), price: num(i.price) };
-    }) };
-  }
-
-  async function confirmSave(btn) {
-    const bad = draft.items.find(i => !byArticle[String(i.article).toUpperCase()] || !(num(i.qty) > 0));
-    if (!draft.items.length || bad) { say('Fix the items marked in the card before saving.', 'bot', 'err'); return; }
-    if (busy) return;
-    busy = true; btn.disabled = true; btn.textContent = 'Saving…';
-    const typing = say('Saving to the Order sheet…', 'bot', 'typing');
-    try {
-      const order = normalized();
-      const r = await api('submit', { order });
-      typing.remove();
-      nextPo = r.nextPo;
-      $('status').textContent = `${products.length} product${products.length === 1 ? "" : "s"} · next PO ${nextPo}`;
-      cardEl.remove(); cardEl = null; draft = null; saveDraft();
-      say(`Saved ${r.rowsAdded} row${r.rowsAdded > 1 ? 's' : ''} to the Order sheet as #${r.po}.`);
-      showWhatsApp(waText(r.po, r.order));
-      log.push({ t: 'wa', text: waText(r.po, r.order) }); saveLog();
-      chat.append(h('div', { class: 'msg bot' }, `#${r.po} is now In Queue on the `, h('a', { href: './production.html', target: '_blank', rel: 'noopener' }, 'Production board'), '.')); scroll();
-    } catch (err) {
-      typing.remove();
-      btn.disabled = false; btn.textContent = 'Confirm & save to sheet';
-      say(err.message, 'bot', 'err');
-    } finally {
-      busy = false;
-    }
-  }
-
-  /* ---------- WhatsApp message ---------- */
-  function waText(po, o) {
-    const qty = o.items.reduce((s, i) => s + i.qty, 0);
-    const total = o.items.reduce((s, i) => s + i.qty * i.price, 0);
-    const lines = [
-      `*ORDER #${po}*`,
-      `Buyer: ${o.buyer || '-'}`,
-      `Order date: ${fmtDate(o.entryDate)}`,
-      `Delivery: ${fmtDate(o.deliveryDate)}`,
-      ''
-    ];
-    o.items.forEach((i, n) => {
-      lines.push(`${n + 1}. ${i.article} · ${i.description}`);
-      lines.push(`   ${i.qty} pcs × ${rp(i.price)} = ${rp(i.qty * i.price)}`);
-      if (i.notes) lines.push(`   Note: ${i.notes}`);
-    });
-    lines.push('', `*Total: ${qty} pcs · ${rp(total)}*`);
-    return lines.join('\n');
-  }
-  function showWhatsApp(text) {
-    const copyBtn = h('button', { class: 'btn', type: 'button', onclick: async () => {
-      try { await navigator.clipboard.writeText(text); copyBtn.textContent = 'Copied'; }
-      catch { const r = document.createRange(); r.selectNodeContents(pre); getSelection().removeAllRanges(); getSelection().addRange(r); copyBtn.textContent = 'Selected: press copy'; }
-      setTimeout(() => copyBtn.textContent = 'Copy', 1800);
-    } }, 'Copy');
-    const pre = h('pre', { class: 'wa-text' }, text);
-    chat.append(h('div', { class: 'card' },
-      h('h2', {}, 'WhatsApp message'), pre,
-      h('div', { class: 'row' }, copyBtn,
-        h('a', { class: 'btn wa', href: 'https://wa.me/?text=' + encodeURIComponent(text), target: '_blank', rel: 'noopener' }, 'Open in WhatsApp'))));
-    scroll();
-  }
-
-  /* ---------- start ---------- */
-  if (log.length) {
-    const old = log; log = [];
-    old.forEach(m => m.t === 'wa' ? (showWhatsApp(m.text), log.push(m)) : say(m.text, m.who, m.extra));
-    try { draft = JSON.parse(tabStore.get('jo.draft') || 'null'); } catch { draft = null; }
-  } else {
-    say('Hi! Type an order the way you would in a chat: buyer, products, quantity, price if different, names, delivery date. I will turn it into the order template for you to confirm.');
-  }
-  if (cfg.url && cfg.pin) connect(); else $('setBtn').click();
+  setView(location.hash.slice(1) || store.get('jo.view'));
+  order.start();
+  prod.start();
+  if (!ready()) $('setBtn').click();
 });
 </script>
 </body>
