@@ -396,6 +396,31 @@ startGate(() => {
       const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
       return m ? `${+m[3]} ${MONTHS[+m[2] - 1]} ${m[1]}` : '-';
     }
+    // The sheet script sometimes puts the requested delivery date into an item's notes.
+    // Finds a date in a note ("22 Okt", "22/10/2026", "Thu Oct 22 2026 …") so it can be moved to Delivery date.
+    const MON = { jan: 1, feb: 2, mar: 3, apr: 4, mei: 5, may: 5, jun: 6, jul: 7, agu: 8, agt: 8, aug: 8, sep: 9, okt: 10, oct: 10, nov: 11, des: 12, dec: 12 };
+    const MON_RE = 'jan|feb|mar|apr|mei|may|jun|jul|agu|agt|aug|sep|okt|oct|nov|des|dec';
+    function noteDate(note) {
+      const s = String(note || '');
+      let m, d, mo, y;
+      if ((m = s.match(new RegExp(`(?:(?:mon|tue|wed|thu|fri|sat|sun)[a-z]*,?\\s+)?\\b(${MON_RE})[a-z]*\\.?\\s+(\\d{1,2}),?\\s+(\\d{4})(?:\\s+\\d{2}:\\d{2}(?::\\d{2})?)?(?:\\s+GMT[+-]\\d{4})?(?:\\s+\\([^)]*\\))?`, 'i')))) {
+        mo = MON[m[1].toLowerCase()]; d = +m[2]; y = +m[3];
+      } else if ((m = s.match(new RegExp(`\\b(\\d{1,2})\\s*(${MON_RE})[a-z]*\\.?(?:\\s+(\\d{4}))?`, 'i')))) {
+        d = +m[1]; mo = MON[m[2].toLowerCase()]; y = m[3] ? +m[3] : 0;
+      } else if ((m = s.match(/\b(\d{1,2})[/-](\d{1,2})(?:[/-](\d{4}|\d{2}))?\b/))
+                 // "2/3" alone could be a ratio or a size: only a date with a year or a date word nearby.
+                 && (m[3] || /\b(request|req|delivery|deliver|kirim|dikirim|pengiriman|tgl|tanggal|date|due|eta)\b/i.test(s))) {
+        d = +m[1]; mo = +m[2]; y = m[3] ? (m[3].length === 2 ? 2000 + +m[3] : +m[3]) : 0;
+      } else return null;
+      if (!(mo >= 1 && mo <= 12 && d >= 1 && d <= 31)) return null;
+      const today = new Date(Date.now() + 7 * 3600e3).toISOString().slice(0, 10);
+      const iso = yy => `${yy}-${String(mo).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      if (!y) { y = +today.slice(0, 4); if (iso(y) < today) y++; } // no year given: the next time that date comes round
+      // What is left of the note once the date and words like "request date" / "kirim" are taken out.
+      const rest = s.replace(m[0], ' ').replace(/\b(request(ed)?|req|delivery|deliver|kirim|dikirim|pengiriman|tgl|tanggal|date|due|eta|on|by|tanggal kirim)\b/gi, ' ')
+        .replace(/^[\s,.:;\-–·]+|[\s,.:;\-–·]+$/g, '').replace(/\s{2,}/g, ' ');
+      return { date: iso(y), rest };
+    }
     const scroll = () => requestAnimationFrame(() => main.scrollTop = main.scrollHeight);
     const status = () => { $('orderStatus').textContent = `${products.length} product${products.length === 1 ? '' : 's'} · next PO ${nextPo}`; };
     let log = [];
@@ -485,7 +510,14 @@ startGate(() => {
         draft.items.forEach((i, n) => { if (!byArticle[String(i.article).toUpperCase()]) w.push(`Item ${n + 1}: article "${i.article || '?'}" is not in Product Database.`); });
         if (!draft.deliveryDate) w.push('Delivery date is empty.');
         if (!draft.buyer) w.push('Buyer is empty.');
-        warnEl.replaceChildren(...(w.length ? [h('div', { class: 'warn' }, w.join('\n'))] : []));
+        // Offer a one-tap fix when the delivery date ended up in an item's notes.
+        const fixes = draft.deliveryDate ? [] : draft.items.flatMap((it, n) => {
+          const f = noteDate(it.notes);
+          return f ? [h('div', { class: 'warn' }, `Item ${n + 1}: the note "${it.notes}" looks like the delivery date. `,
+            h('button', { class: 'link', type: 'button', onclick: () => { draft.deliveryDate = f.date; it.notes = f.rest; renderDraft(); } },
+              `Use ${fmtDate(f.date)} as delivery date`))] : [];
+        });
+        warnEl.replaceChildren(...(w.length ? [h('div', { class: 'warn' }, w.join('\n'))] : []), ...fixes);
       }
       function drawItems() {
         items.replaceChildren(...draft.items.map((it, idx) => {
@@ -544,6 +576,7 @@ startGate(() => {
     async function confirmSave(btn) {
       const bad = draft.items.find(i => !byArticle[String(i.article).toUpperCase()] || !(num(i.qty) > 0));
       if (!draft.items.length || bad) { say('Fix the items marked in the card before saving.', 'bot', 'err'); return; }
+      if (!draft.deliveryDate && !confirm('This order has no delivery date. Save it anyway?')) return;
       if (busy) return;
       busy = true; btn.disabled = true; btn.textContent = 'Saving…';
       const typing = say('Saving to the Order sheet…', 'bot', 'typing');
