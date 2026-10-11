@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src https://script.google.com https://script.googleusercontent.com; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex,nofollow">
 <title>JO Order</title>
 <meta name="theme-color" content="#d62d1c">
 <meta name="application-name" content="JO Order">
@@ -72,10 +75,28 @@ dialog::backdrop{background:rgba(0,0,0,.4)}
 dialog h2{margin:0 0 12px;font-size:17px}
 dialog label{margin-bottom:10px}
 .hint{font-size:12px;color:var(--muted)}
+label.check{flex-direction:row;align-items:center;gap:8px;color:var(--ink);font-size:13px}
+label.check input{width:auto}
 @media (max-width:480px){.grid{grid-template-columns:1fr 1fr}.item{grid-template-columns:1fr 60px 90px 28px}}
+body.locked>:not(#gate){display:none!important}
+body:not(.locked) #gate{display:none}
+#gate{flex:1;display:flex;align-items:center;justify-content:center;padding:16px}
+#gate form{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;width:min(360px,100%);display:flex;flex-direction:column;gap:12px}
+#gate h2{margin:0;font-size:18px}
+#gate .gate-err{color:var(--warn);font-size:13px;min-height:1.2em;margin:0}
 </style>
 </head>
-<body>
+<body class="locked">
+<div id="gate">
+  <form id="gateForm" autocomplete="off">
+    <h2>JO · Enter password</h2>
+    <label>Password
+      <input id="gatePw" type="password" inputmode="numeric" autocomplete="current-password" required autofocus>
+    </label>
+    <p class="gate-err" id="gateErr" role="alert"></p>
+    <button class="btn primary" type="submit">Open</button>
+  </form>
+</div>
 <header>
   <img class="logo" alt="" src="data:image/png;base64,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">
   <div class="grow">
@@ -105,9 +126,10 @@ dialog label{margin-bottom:10px}
       <input id="cfgUrl" placeholder="https://script.google.com/macros/s/…/exec" required>
     </label>
     <label>PIN
-      <input id="cfgPin" type="password" required>
+      <input id="cfgPin" type="password" autocomplete="off" required>
     </label>
-    <p class="hint">Saved only in this browser.</p>
+    <label class="check"><input id="cfgRemember" type="checkbox"> Remember PIN on this device</label>
+    <p class="hint">Saved only in this browser. Leave "Remember" off on shared devices.</p>
     <div class="row">
       <button class="btn primary" value="save">Save &amp; connect</button>
       <button class="btn" value="cancel" formnovalidate>Cancel</button>
@@ -116,14 +138,60 @@ dialog label{margin-bottom:10px}
 </dialog>
 
 <script>
-(() => {
+const GATE = {"salt": "1c6188fdbc4c0d9168bb58d3091d5ac4", "iter": 600000, "hash": "2f9ded760095935c7ae2ea0ae5ab177a2c06613be70b20268cf4465b07ba7800"}; // @gate: generated by scripts/configure.py, do not edit by hand
+const DEFAULT_URL = "https://script.google.com/macros/s/AKfycbzrAohIygflBQauZ5Pv2JR82rPY5IfgI-7S_iDbFlELcuGVQBU2OYmB-Vzs0s6-C5AEOg/exec"; // @url: generated by scripts/configure.py from APPS_SCRIPT_URL
+// Client-side gate: hides the UI from casual visitors. The data itself is protected by the PIN check in Apps Script.
+function startGate(start) {
+  // Unlock lasts for this tab only; every new tab or window asks again.
+  const KEY = 'jo.gate';
+  const open = () => { document.body.classList.remove('locked'); start(); };
+  try {
+    if (GATE.hash && sessionStorage.getItem(KEY) === GATE.hash) return open();
+  } catch {}
+  const form = document.getElementById('gateForm'), inp = document.getElementById('gatePw'), err = document.getElementById('gateErr'), btn = form.querySelector('button');
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!GATE.hash) { err.textContent = 'Password is not set up. Run scripts/configure.py.'; return; }
+    if (!window.crypto || !crypto.subtle) { err.textContent = 'Open this page over https.'; return; }
+    btn.disabled = true; err.textContent = 'Checking…';
+    try {
+      const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(inp.value), 'PBKDF2', false, ['deriveBits']);
+      const salt = Uint8Array.from(GATE.salt.match(/../g), x => parseInt(x, 16));
+      const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt, iterations: GATE.iter }, key, 256);
+      const hex = [...new Uint8Array(bits)].map(b => b.toString(16).padStart(2, '0')).join('');
+      if (hex !== GATE.hash) { err.textContent = 'Wrong password.'; inp.select(); return; }
+      try {
+        sessionStorage.setItem(KEY, GATE.hash);
+        // The lock-screen password doubles as the sheet PIN for this tab unless a PIN is already saved.
+        if (!localStorage.getItem('jo.pin') && !sessionStorage.getItem('jo.pin')) sessionStorage.setItem('jo.pin', inp.value);
+      } catch {}
+      err.textContent = ''; inp.value = ''; open();
+    } catch { err.textContent = 'Could not check the password.'; }
+    finally { btn.disabled = false; }
+  });
+}
+</script>
+<script>
+startGate(() => {
   const $ = id => document.getElementById(id);
   const chat = $('chat'), main = $('main'), input = $('input');
   const store = {
     get(k){ try { return localStorage.getItem(k) || ''; } catch { return ''; } },
     set(k,v){ try { localStorage.setItem(k,v); } catch {} }
   };
-  let cfg = { url: store.get('jo.url'), pin: store.get('jo.pin') };
+  // Only ever send the PIN to a Google Apps Script web app.
+  const URL_RE = /^https:\/\/script\.google\.com\/(?:a\/macros\/[^/]+|macros)\/s\/[\w-]+\/exec$/;
+  const loadPin = () => { try { return localStorage.getItem('jo.pin') || sessionStorage.getItem('jo.pin') || ''; } catch { return ''; } };
+  function savePin(pin, remember) {
+    try { sessionStorage.setItem('jo.pin', pin); remember ? localStorage.setItem('jo.pin', pin) : localStorage.removeItem('jo.pin'); } catch {}
+  }
+  // Order history (buyers, prices) lives only as long as this tab, not on the device.
+  const tabStore = {
+    get(k){ try { return sessionStorage.getItem(k) || ''; } catch { return ''; } },
+    set(k,v){ try { sessionStorage.setItem(k,v); } catch {} }
+  };
+  try { localStorage.removeItem('jo.chat'); localStorage.removeItem('jo.draft'); localStorage.removeItem('jo.gate'); } catch {}
+  let cfg = { url: store.get('jo.url') || DEFAULT_URL, pin: loadPin() };
   let products = [], byArticle = {}, nextPo = '', draft = null, busy = false, cardEl = null, saveBtnRef = null;
   const CONFIRM_RE = /^\s*(ok|oke|okay|okey|confirm|confirmed|konfirmasi|ya|yes|y|yup|save|simpan|gas|lanjut|setuju|sip|done|deal)\s*[.!]*\s*$/i;
 
@@ -139,30 +207,28 @@ dialog label{margin-bottom:10px}
     return el;
   }
   const rp = n => 'Rp' + Math.round(Number(n) || 0).toLocaleString('en-US');
-  const num = v => Number(String(v).replace(/[^\d.]/g, '')) || 0;
+  // Whole Rupiah / pcs only: "20.000", "20,000" and "Rp20000" all mean 20000.
+  const num = v => Number(String(v).replace(/\D/g, '')) || 0;
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   function fmtDate(s) {
     const m = String(s || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
     return m ? `${+m[3]} ${MONTHS[+m[2] - 1]} ${m[1]}` : '-';
   }
-  function today() {
-    const d = new Date(Date.now() + 7 * 3600e3); // Asia/Jakarta
-    return d.toISOString().slice(0, 10);
-  }
   const scroll = () => requestAnimationFrame(() => main.scrollTop = main.scrollHeight);
   let log = [];
-  try { log = JSON.parse(store.get('jo.chat') || '[]'); } catch { log = []; }
-  const saveLog = () => { log = log.slice(-60); store.set('jo.chat', JSON.stringify(log)); };
+  try { log = JSON.parse(tabStore.get('jo.chat') || '[]'); } catch { log = []; }
+  const saveLog = () => { log = log.slice(-60); tabStore.set('jo.chat', JSON.stringify(log)); };
   function say(text, who = 'bot', extra = '', keep = extra !== 'typing') {
     const el = h('div', { class: `msg ${who} ${extra}` }, text);
     chat.append(el); scroll();
     if (keep) { log.push({ t: 'msg', text, who, extra }); saveLog(); }
     return el;
   }
-  const saveDraft = () => store.set('jo.draft', draft ? JSON.stringify(draft) : '');
+  const saveDraft = () => tabStore.set('jo.draft', draft ? JSON.stringify(draft) : '');
 
   async function api(action, data = {}) {
     if (!cfg.url) throw new Error('Open Settings and paste your Apps Script URL first.');
+    if (!URL_RE.test(cfg.url)) throw new Error('The URL in Settings must be an Apps Script web app link (https://script.google.com/macros/s/…/exec).');
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), 60000);
     let res;
@@ -200,11 +266,13 @@ dialog label{margin-bottom:10px}
     }
   }
 
-  $('setBtn').onclick = () => { $('cfgUrl').value = cfg.url; $('cfgPin').value = cfg.pin; $('settings').showModal(); };
+  $('setBtn').onclick = () => { $('cfgUrl').value = cfg.url; $('cfgPin').value = cfg.pin; $('cfgRemember').checked = !!store.get('jo.pin'); $('settings').showModal(); };
   $('settings').addEventListener('close', async () => {
     if ($('settings').returnValue !== 'save') return;
-    cfg = { url: $('cfgUrl').value.trim(), pin: $('cfgPin').value.trim() };
-    store.set('jo.url', cfg.url); store.set('jo.pin', cfg.pin);
+    const url = $('cfgUrl').value.trim();
+    if (!URL_RE.test(url)) { say('That is not an Apps Script web app URL. It should look like https://script.google.com/macros/s/…/exec', 'bot', 'err'); return; }
+    cfg = { url, pin: $('cfgPin').value.trim() };
+    store.set('jo.url', cfg.url); savePin(cfg.pin, $('cfgRemember').checked);
     if (await connect()) say('Connected. Type an order whenever you are ready.');
   });
 
@@ -237,6 +305,7 @@ dialog label{margin-bottom:10px}
   input.addEventListener('input', autosize);
 
   $('newBtn').onclick = () => {
+    if (draft && cardEl && !confirm('Discard the unsaved order?')) return;
     if (cardEl) cardEl.remove();
     cardEl = null; draft = null; saveDraft();
     chat.replaceChildren(); log = []; saveLog();
@@ -384,12 +453,12 @@ dialog label{margin-bottom:10px}
   if (log.length) {
     const old = log; log = [];
     old.forEach(m => m.t === 'wa' ? (showWhatsApp(m.text), log.push(m)) : say(m.text, m.who, m.extra));
-    try { draft = JSON.parse(store.get('jo.draft') || 'null'); } catch { draft = null; }
+    try { draft = JSON.parse(tabStore.get('jo.draft') || 'null'); } catch { draft = null; }
   } else {
     say('Hi! Type an order the way you would in a chat: buyer, products, quantity, price if different, names, delivery date. I will turn it into the order template for you to confirm.');
   }
-  if (cfg.url) connect(); else $('setBtn').click();
-})();
+  if (cfg.url && cfg.pin) connect(); else $('setBtn').click();
+});
 </script>
 </body>
 </html>
